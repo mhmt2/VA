@@ -11,6 +11,8 @@ author:
 date: "`r Sys.Date()`"
 output: distill::distill_article
 ---
+#Introduction
+Describe the challenge of the original raw data and how it was prepared
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -55,6 +57,8 @@ freq_sorted <- freq_returned %>%
 freq_cum <- freq_sorted %>%
   mutate(cumfreq = cumsum(Returns))
 ```
+##ggplot visualisation
+Describe propose visualisation
 
 ```{r}
 ggplot(data=freq_cum, aes(x =reorder(`Sub-Category`, -`Returns`), y=`Returns`))+
