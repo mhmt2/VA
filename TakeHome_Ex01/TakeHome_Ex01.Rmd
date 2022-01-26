@@ -1,0 +1,114 @@
+---
+title: "ISSS608 Take-Home Exercise 1"
+description: |
+  Using ggplot2 to prepare two sets of data visualisations.
+author:
+  - name: Melissa Tan 
+    email: melissa.tan.2021@mitb.smu.edu.sg
+    affiliation: SMU MITB Analytics Track
+    affiliation_url: https://scis.smu.edu.sg/master-it-business/analytics-track/curriculum?gclid=CjwKCAiA3L6PBhBvEiwAINlJ9EJwYxpaZv-zPxR0UMntDh37TrlWU7jwXP9Dcu9jvWvN8uEJsOWzTRoCqrQQAvD_BwE
+    
+date: "`r Sys.Date()`"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+```{r}
+packages = c('tidyverse', 'readxl', 'knitr')
+
+for(p in packages){
+  if(!require(p, character.only = T)){
+    install.packages(p)
+  }
+  library(p, character.only = T)
+}
+```
+
+```{r}
+orders <- read_xls("data/Superstore-2021.xls",
+                  sheet = "Orders")
+returns <- read_xls("data/Superstore-2021.xls",
+                  sheet = "Returns")
+                  
+```
+
+```{r}
+joined_tab <- left_join(returns, orders,
+                        by = c('Order ID' = 'Order ID'))
+```
+
+```{r}
+freq_returned <- joined_tab %>%
+  group_by(`Sub-Category`) %>%
+  summarise('Returns' = n()) %>%
+  ungroup()
+```
+
+```{r}
+freq_sorted <- freq_returned %>%
+  arrange(desc(Returns))
+```
+
+```{r}
+freq_cum <- freq_sorted %>%
+  mutate(cumfreq = cumsum(Returns))
+```
+
+```{r}
+ggplot(data=freq_cum, aes(x =reorder(`Sub-Category`, -`Returns`), y=`Returns`))+
+  geom_bar(stat="identity", fill="lightblue")+
+  geom_line(aes(y=`cumfreq`), colour = "black",size=0.5, group=1)+
+  scale_y_continuous(sec.axis = sec_axis(~.*100/sum(freq_cum$Returns), name = "Percentage (%)"))+
+  geom_point(aes(y=`cumfreq`), colour = "black", size=1)+
+  xlab("Sub-Category") +
+  ylab("Returns (Absolute Frequency)") +
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),
+        legend.position = "none",
+        panel.background = element_rect(fill = "white",
+                                        colour="white",
+                                        size=0.5,
+                                        linetype="solid"),
+        panel.grid.major = element_line(size = 0.25,
+                                        linetype = 'solid',
+                                        colour = "lightgrey"),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  ggtitle ("Pareto Chart of Returns by Sub-Category")
+
+
+```
+
+```{r}
+SGpop <- read_csv("data/respopagesextod2021.csv")
+
+SGpop_gp <- SGpop %>%
+  group_by(`Sex`,`AG`) %>%
+  summarise('Pop'=sum(`Pop`)) %>%
+  ungroup()
+
+SGpop_gp$AG[SGpop_gp$AG=="5_to_9"] <- "05_to_9"
+
+SGpop_gp$Sex[SGpop_gp$Sex=="Females"] <- "Female"
+SGpop_gp$Sex[SGpop_gp$Sex=="Males"] <- "Male"
+
+AG_new <- c("0-4", "5-9", "10-14","15-19","20-24","25-29","30-34","35-39","40-44","45-49","50-54","55-59","60-64","65-69","70-74","75-79","80-84","85-89","90 & over")
+
+```
+
+```{r}
+ggplot(SGpop_gp, aes(x = `AG`, y = `Pop`, fill = `Sex`)) + 
+  geom_bar(data = subset(SGpop_gp, Sex == "Female"), stat = "identity") + 
+  geom_bar(data = subset(SGpop_gp, Sex == "Male"), aes(y=`Pop`*-1), stat = "identity") + 
+  scale_y_continuous(name="Population ('000)", breaks = seq(-200000, 200000, 50000),
+                     labels = paste0(as.character(c(seq(200, 0, -50), seq(50, 200, 50))))) + 
+  scale_x_discrete(labels= AG_new)+
+  xlab("Age (Years)")+
+  coord_flip()+
+  labs(title="Age-Sex Pyramid of Singapore Residents, June 2021")+
+  guides(fill=guide_legend(title="Gender"))
+```
+
+
+
