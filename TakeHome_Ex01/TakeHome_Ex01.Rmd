@@ -11,7 +11,7 @@ author:
 date: "`r Sys.Date()`"
 output: distill::distill_article
 ---
-# Data Preparation in R
+# Data Preparation in R - EDIT
 For both visualisations, data extraction and wrangling were done in R using the *tidyverse* suite of packages. An addition *readxl* package was also installed to import the Superstore dataset as it was not part of the *tidyverse* suite. The *knitr* package was used to allow dataframe tables to be displayed. 
 
 ```{r setup, include=FALSE}
