@@ -11,13 +11,13 @@ author:
 date: "`r Sys.Date()`"
 output: distill::distill_article
 ---
-#Introduction
-Describe the challenge of the original raw data and how it was prepared
-test test test
+# Data Preparation in R
+For both visualisations, data extraction and wrangling were done in R using the *tidyverse* suite of packages. An addition *readxl* package was also installed to import the Superstore dataset as it was not part of the *tidyverse* suite. The *knitr* package was used to allow dataframe tables to be displayed. 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
-```{r}
+```{r echo=TRUE}
 packages = c('tidyverse', 'readxl', 'knitr')
 
 for(p in packages){
@@ -28,39 +28,60 @@ for(p in packages){
 }
 ```
 
-```{r}
+# Visualisation 1: Pareto Chart of Returns by Sub-Category
+
+First, the relevant data were important into the R environment. A new dataframe, *joined_tab* was created by using the *left_join()* function matched by each row's unique **Order ID**.
+
+
+```{r echo=TRUE}
 orders <- read_xls("data/Superstore-2021.xls",
                   sheet = "Orders")
 returns <- read_xls("data/Superstore-2021.xls",
                   sheet = "Returns")
                   
-```
-
-```{r}
 joined_tab <- left_join(returns, orders,
                         by = c('Order ID' = 'Order ID'))
 ```
 
-```{r}
+Next, the *group_by()* method was used to group the same Sub-Category items together, and *summarise()* was used to compute the count of **Returns** for each Sub-Category.
+
+```{r echo=TRUE}
 freq_returned <- joined_tab %>%
   group_by(`Sub-Category`) %>%
   summarise('Returns' = n()) %>%
   ungroup()
 ```
 
+To calculate the **cumulative frequency**, the items were sorted in order of decreasing frequency by using *arrange(desc())*, and a new datafram column **cumfreq** was created to store the cumulative sum of **Returns**.
+
 ```{r}
 freq_sorted <- freq_returned %>%
   arrange(desc(Returns))
-```
 
-```{r}
 freq_cum <- freq_sorted %>%
   mutate(cumfreq = cumsum(Returns))
-```
-##ggplot visualisation
-Describe propose visualisation
 
-```{r}
+kable(freq_cum)
+```
+
+## ggplot visualisation
+
+A Pareto chart is a type of chart that contains both bars and a line graph, where individual values are represented in descending order by bars, and the cumulative total is represented by the line. 
+While R has the *qcc* package to compute and plot such charts, for purposes of this take-home exercise, *ggplot2* was used to create the chart by appropriate layering and transformation.
+
+### Plotting the bar chart
+1. First, to plot the bar chart to show the absolute frequency of returns, *geom_bar()* was used. 
+2. Next, to plot the cumulative frequency values in a line graph, *geom_line()* and *geom_point()* was applied.
+
++ The challenge for using *ggplot2* to prepare a Pareto chart is that the y-axes for the bar and line graphs are different if the **percentage** cumulative total is to be displayed. This is because to discourage manipulative and misleading data visualisation practices, R allows only scaling for the transformation of the secondary axis and the 2 axes cannot be separately defined. 
+
++ To overcome this, an appropriate scalar factor of *100/sum(freq_cum$Returns)* was determined for the secondary y-axis, where *sum(freq_cum$Returns)* refers to the total sum value of the Returns column which was then converted into a percentage figure by multiplying by 100.
+
+3. Finally, formatting of the Pareto chart was done to improve ease of visualisation by using *theme()* e.g. using a minimalist theme, reducing the data ink of non-essential background and grid lines. 
+
+4. The final Pareto Chart of Returns by Sub-Category is shown below:
+```{r echo=TRUE}
+
 ggplot(data=freq_cum, aes(x =reorder(`Sub-Category`, -`Returns`), y=`Returns`))+
   geom_bar(stat="identity", fill="lightblue")+
   geom_line(aes(y=`cumfreq`), colour = "black",size=0.5, group=1)+
@@ -81,8 +102,10 @@ ggplot(data=freq_cum, aes(x =reorder(`Sub-Category`, -`Returns`), y=`Returns`))+
         panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
   ggtitle ("Pareto Chart of Returns by Sub-Category")
 
-
 ```
+
+
+
 
 ```{r}
 SGpop <- read_csv("data/respopagesextod2021.csv")
