@@ -196,6 +196,13 @@ On the other hand, programming languages such as R:
 As data analyst, especially one that specialises in data visualisation, it would be a good idea to develop basic familiarity with a range of GUI tools, and sufficient competency in at least one programmatic visualisation technique, so as to have the versatility to apply either or even both methods when required.  
 
 
+# References and Resources:
+1. [R4DSA:Creating a Pareto Chart using ggplot](https://r4dsa.netlify.app/posts/2022-01-23-creating-a-pareto-chart-using-ggplot/)
 
+2. [International Population Pyramids with ggplot2](https://rpubs.com/walkerke/pyramids_ggplot2)
+
+3. [Why use R when you have Tableau?](https://nandeshwar.info/data-science-2/tableau-vs-r/)
+
+4. [GUI or Coding: Production vs. Operation](https://towardsdatascience.com/guis-or-coding-production-vs-operation-fc1de9e483a8)
 
 
