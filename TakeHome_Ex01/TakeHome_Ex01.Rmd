@@ -70,7 +70,7 @@ A Pareto chart is a type of chart that contains both bars and a line graph, wher
 While R has the *qcc* package to compute and plot such charts, for purposes of this take-home exercise, *ggplot2* was used to create the chart by appropriate layering and transformation.
 
 
-First, to plot the bar chart to show the absolute frequency of returns, *geom_bar()* was used. 
+First, to plot the bar chart to show the absolute frequency of returns, *geom_bar()* was used. As the default option for bar charts in ggplot is to arrange the bars in alphabetical order, *reorder()* was used to re-arrange the bars in descending order of frequency of returns (*-Returns*).  
 
 Next, to plot the cumulative frequency values in a line graph, *geom_line()* and *geom_point()* was applied.
 

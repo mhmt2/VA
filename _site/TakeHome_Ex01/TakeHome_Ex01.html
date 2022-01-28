@@ -1618,7 +1618,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 <h2 id="ggplot2-visualisation">ggplot2 visualisation</h2>
 <p>A Pareto chart is a type of chart that contains both bars and a line graph, where individual values are represented in descending order by bars, and the cumulative total is represented by the line. While R has the <em>qcc</em> package to compute and plot such charts, for purposes of this take-home exercise, <em>ggplot2</em> was used to create the chart by appropriate layering and transformation.</p>
-<p>First, to plot the bar chart to show the absolute frequency of returns, <em>geom_bar()</em> was used.</p>
+<p>First, to plot the bar chart to show the absolute frequency of returns, <em>geom_bar()</em> was used. As the default option for bar charts in ggplot is to arrange the bars in alphabetical order, <em>reorder()</em> was used to re-arrange the bars in descending order of frequency of returns (<em>-Returns</em>).</p>
 <p>Next, to plot the cumulative frequency values in a line graph, <em>geom_line()</em> and <em>geom_point()</em> was applied.</p>
 <ul>
 <li><p>The <strong>challenge</strong> for using <em>ggplot2</em> to prepare a Pareto chart is that the y-axes for the bar and line graphs are different if the <strong>percentage</strong> cumulative total is to be displayed. This is because to discourage manipulative and misleading data visualisation practices, R allows only scaling for the transformation of the secondary axis and the 2 axes cannot be separately defined.</p></li>
