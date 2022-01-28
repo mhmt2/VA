@@ -1,7 +1,7 @@
 name: "VA"
-title: "Visual Analytics"
+title: "ISSS608: Visual Analytics (AY21-22)"
 description: |
-  Visual Analytics
+  Data visualisation practices and exercises from ISSS608
 output_dir: "_site"
 navbar:
   right:
@@ -18,6 +18,8 @@ navbar:
         href: "DataViz2"
     - text: "Take-home Exercise"
       menu:
-      - text: "Take-home Exercise 1"
+      - text: "(Demo)Take-home Exercise 1"
         href: "TH_Ex/TH_Ex01/TH_Ex01.html"
+      - text: "Take-home Exercise 1"
+        href: "TakeHome_Ex01/TakeHome_Ex01.html"
 output: distill::distill_article

@@ -1,7 +1,7 @@
 ---
-title: "Visual Analytics"
+title: "ISSS608: Visual Analytics (AY21-22)"
 description: |
-  Welcome to the website. I hope you enjoy it!
+  Data visualisation practices and exercises from ISSS608
 site: distill::distill_website
 ---
 

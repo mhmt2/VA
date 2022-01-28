@@ -1,9 +1,9 @@
 ---
-title: "ISSS608 Take-Home Exercise 1"
+title: "ISSS608: AY2021-22(T2) Take-Home Exercise 1"
 description: |
   Using ggplot2 to prepare two sets of data visualisations.
 author:
-  - name: Melissa Tan 
+  - name: Melissa Tan
     email: melissa.tan.2021@mitb.smu.edu.sg
     affiliation: SMU MITB Analytics Track
     affiliation_url: https://scis.smu.edu.sg/master-it-business/analytics-track/curriculum?gclid=CjwKCAiA3L6PBhBvEiwAINlJ9EJwYxpaZv-zPxR0UMntDh37TrlWU7jwXP9Dcu9jvWvN8uEJsOWzTRoCqrQQAvD_BwE
@@ -11,8 +11,8 @@ author:
 date: "`r Sys.Date()`"
 output: distill::distill_article
 ---
-# Data Preparation in R - EDIT
-For both visualisations, data extraction and wrangling were done in R using the *tidyverse* suite of packages. An addition *readxl* package was also installed to import the Superstore dataset as it was not part of the *tidyverse* suite. The *knitr* package was used to allow dataframe tables to be displayed. 
+# Data Preparation in R 
+For both visualisations, data extraction and wrangling were done in R using the *tidyverse* suite of packages. An additional *readxl* package was also installed to import the Superstore dataset (stored in Excel format) as it was not part of the *tidyverse* suite. The *knitr* package was used to allow dataframe tables to be displayed. 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -28,9 +28,9 @@ for(p in packages){
 }
 ```
 
-# Visualisation 1: Pareto Chart of Returns by Sub-Category
+# Visualisation 1: Pareto Chart 
 
-First, the relevant data were important into the R environment. A new dataframe, *joined_tab* was created by using the *left_join()* function matched by each row's unique **Order ID**.
+First, the relevant data were imported into the R environment. As the required data, **Returns** was in a different Excel worksheet from **Orders** and **Sub-Category**, a new dataframe, *joined_tab* was created by using the *left_join()* function matched by each row's unique **Order ID**.
 
 
 ```{r echo=TRUE}
@@ -43,7 +43,7 @@ joined_tab <- left_join(returns, orders,
                         by = c('Order ID' = 'Order ID'))
 ```
 
-Next, the *group_by()* method was used to group the same Sub-Category items together, and *summarise()* was used to compute the count of **Returns** for each Sub-Category.
+Next, the *group_by()* method was used to group the same **Sub-Category** items together, and *summarise()* was used to compute the count of **Returns** for each Sub-Category.
 
 ```{r echo=TRUE}
 freq_returned <- joined_tab %>%
@@ -52,7 +52,7 @@ freq_returned <- joined_tab %>%
   ungroup()
 ```
 
-To calculate the **cumulative frequency**, the items were sorted in order of decreasing frequency by using *arrange(desc())*, and a new datafram column **cumfreq** was created to store the cumulative sum of **Returns**.
+To calculate the **cumulative frequency**, the items were sorted in order of decreasing frequency by using *arrange(desc())*, and a new dataframe column **cumfreq** was created to store the cumulative sum of **Returns**.
 
 ```{r}
 freq_sorted <- freq_returned %>%
@@ -64,22 +64,24 @@ freq_cum <- freq_sorted %>%
 kable(freq_cum)
 ```
 
-## ggplot visualisation
+## ggplot2 visualisation
 
 A Pareto chart is a type of chart that contains both bars and a line graph, where individual values are represented in descending order by bars, and the cumulative total is represented by the line. 
 While R has the *qcc* package to compute and plot such charts, for purposes of this take-home exercise, *ggplot2* was used to create the chart by appropriate layering and transformation.
 
-### Plotting the bar chart
-1. First, to plot the bar chart to show the absolute frequency of returns, *geom_bar()* was used. 
-2. Next, to plot the cumulative frequency values in a line graph, *geom_line()* and *geom_point()* was applied.
 
-+ The challenge for using *ggplot2* to prepare a Pareto chart is that the y-axes for the bar and line graphs are different if the **percentage** cumulative total is to be displayed. This is because to discourage manipulative and misleading data visualisation practices, R allows only scaling for the transformation of the secondary axis and the 2 axes cannot be separately defined. 
+First, to plot the bar chart to show the absolute frequency of returns, *geom_bar()* was used. 
 
-+ To overcome this, an appropriate scalar factor of *100/sum(freq_cum$Returns)* was determined for the secondary y-axis, where *sum(freq_cum$Returns)* refers to the total sum value of the Returns column which was then converted into a percentage figure by multiplying by 100.
+Next, to plot the cumulative frequency values in a line graph, *geom_line()* and *geom_point()* was applied.
 
-3. Finally, formatting of the Pareto chart was done to improve ease of visualisation by using *theme()* e.g. using a minimalist theme, reducing the data ink of non-essential background and grid lines. 
+  + The **challenge** for using *ggplot2* to prepare a Pareto chart is that the y-axes for the bar and line graphs are different if the **percentage** cumulative total is to be displayed. This is because to discourage manipulative and misleading data visualisation practices, R allows only scaling for the transformation of the secondary axis and the 2 axes cannot be separately defined. 
 
-4. The final Pareto Chart of Returns by Sub-Category is shown below:
+  + To overcome this, an appropriate scalar factor of was determined for the secondary y-axis, where *sum(freq_cum$Returns)* refers to the total sum value of the Returns column which was then converted into a percentage figure by multiplying by 100.
+
+Finally, formatting of the Pareto chart was done to improve ease of visualisation by using *theme()* e.g. using a minimalist theme, reducing the data ink of non-essential background and grid lines, and re-orientating the x-tick labels to avoid overlapping text. 
+
+The R code and the final Pareto Chart of Returns by Sub-Category is shown below:
+
 ```{r echo=TRUE}
 
 ggplot(data=freq_cum, aes(x =reorder(`Sub-Category`, -`Returns`), y=`Returns`))+
@@ -107,7 +109,11 @@ ggplot(data=freq_cum, aes(x =reorder(`Sub-Category`, -`Returns`), y=`Returns`))+
 
 
 
-```{r}
+# Visualisation 2: Population Pyramid
+
+Once again, data from the source *csv* file was imported into the R environment by using *read_csv()*. Since only the age, gender and population fields were needed for this exercise, a new dataframe, *SGpop_gp* was created by using the *groupby()* function to group the dataset first by gender ('**Sex**'), then by age bracket ('**AG**). The sum of the corresponding population for each group was calculated using *summarise()* and  stored in the **Pop** field.
+
+```{r echo=TRUE}
 SGpop <- read_csv("data/respopagesextod2021.csv")
 
 SGpop_gp <- SGpop %>%
@@ -115,6 +121,18 @@ SGpop_gp <- SGpop %>%
   summarise('Pop'=sum(`Pop`)) %>%
   ungroup()
 
+kable(head(SGpop_gp))
+```
+
+Additional adjustments to prepare the data for the *ggplot2* graph included:
+  * Correcting the placement of the bars for the 5 to 9 years old age bracket
+  * Changing the name of the gender columns to singular forms; and
+  * Stipulating the order and text of the bars in *AG_new*.
+
+Note: Replacing values in the source dataset is generally not recommended because we may not know what the data represents. However, in this specific example, it is very clear that the 5 to 9 years old age bracket should be displayed between the 0 to 4 years old and the 10 to 14 years old brackets, rather than with the 50+ age brackets. Hence, a replacement was done to resolve the issue.
+
+
+```{r echo=TRUE}
 SGpop_gp$AG[SGpop_gp$AG=="5_to_9"] <- "05_to_9"
 
 SGpop_gp$Sex[SGpop_gp$Sex=="Females"] <- "Female"
@@ -123,8 +141,20 @@ SGpop_gp$Sex[SGpop_gp$Sex=="Males"] <- "Male"
 AG_new <- c("0-4", "5-9", "10-14","15-19","20-24","25-29","30-34","35-39","40-44","45-49","50-54","55-59","60-64","65-69","70-74","75-79","80-84","85-89","90 & over")
 
 ```
+## ggplot2 visualisation
+
+A population pyramid is a special kind of bar graph. In this instance, it displays male and female populations on side-by-side x-axes, with the 0 line down the middle. 
+
+To achieve this effect on ggplot2, the y-axis values for the *Male* population were made **negative** by applying a scalar multiplier of -1. This allows a “reflection” of the two graphs to be displayed along a common axis, separated by 0.
+
+For the chart to display the correct labels and tick marks along the *Population* axis for both **Male** and **Female**, *scale_y_continuous()* was use to set the appropriate intervals and their respective labels such that starting from the left hand side of the chart, labels decreased in equal steps from 200 to 0 before increasing in the same steps back to 200. *scale_x_discrete()* was then used to display the age brackets correctly using the ordered list prepared in *AG_new*.
+
+Finally, *coord_flip()* was used to display the bars horizontally, creating the familiar pyramid shape. 
+
+The R code and final population pyramid chart are shown below:
 
 ```{r}
+
 ggplot(SGpop_gp, aes(x = `AG`, y = `Pop`, fill = `Sex`)) + 
   geom_bar(data = subset(SGpop_gp, Sex == "Female"), stat = "identity") + 
   geom_bar(data = subset(SGpop_gp, Sex == "Male"), aes(y=`Pop`*-1), stat = "identity") + 
@@ -133,9 +163,37 @@ ggplot(SGpop_gp, aes(x = `AG`, y = `Pop`, fill = `Sex`)) +
   scale_x_discrete(labels= AG_new)+
   xlab("Age (Years)")+
   coord_flip()+
-  labs(title="Age-Sex Pyramid of Singapore Residents, June 2021")+
-  guides(fill=guide_legend(title="Gender"))
+  labs(title="Age-Sex Population Pyramid of Singapore Residents, June 2021")+
+  theme(panel.background = element_rect(fill = "white",
+                                        colour="white",
+                                        size=0.5,
+                                        linetype="solid"),
+        panel.grid.major = element_line(size = 0.25,
+                                        linetype = 'solid',
+                                        colour = "lightgrey"),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
 ```
+
+# Reflections on visualising data programmatically versus using Graphical User Interface (GUI) software 
+
+It is a false dichotomy to debate whether one method is better than the other. Both programmatic data visualisation using R, and GUI software such as Tableau, have their pros and cons depending on the requirements and intent of the data analyst.
+
+GUI software such as Tableau have the following features:
+
+  * It is very intuitive and easy to learn and use 
+  * It is effective for visual pattern discovery
+  * It has beautiful out-of-the-box visualisations
+However,it may be limited in its data manipulation options for complex analytics.
+  
+On the other hand, programming languages such as R:
+  
+  * Has a longer learning curve and is less straightforward to use at the start
+  * Yet, it has the benefit of **reproducibility** and **flexibility** to incorporate other features beyond visualisations (e.g. text write-ups, displaying code chunks, creating a blog/slides etc) **all in one script**. 
+
+As data analyst, especially one that specialises in data visualisation, it would be a good idea to develop basic familiarity with a range of GUI tools, and sufficient competency in at least one programmatic visualisation technique, so as to have the versatility to apply either or even both methods when required.  
+
+
 
 
 
