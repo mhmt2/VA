@@ -30,7 +30,7 @@ for(p in packages){
 
 # Visualisation 1: Pareto Chart 
 
-First, the relevant data were imported into the R environment. As the required data, **Returns** was in a different Excel worksheet from **Orders** and **Sub-Category**, a new dataframe, *joined_tab* was created by using the *left_join()* function matched by each row's unique **Order ID**.
+First, the relevant data were imported into the R environment. As the required data were stored in different Excel worksheets, a new dataframe, *joined_tab* was created by using the *left_join()* function matched by each row's unique **Order ID**.
 
 
 ```{r echo=TRUE}
@@ -111,7 +111,7 @@ ggplot(data=freq_cum, aes(x =reorder(`Sub-Category`, -`Returns`), y=`Returns`))+
 
 # Visualisation 2: Population Pyramid
 
-Once again, data from the source *csv* file was imported into the R environment by using *read_csv()*. Since only the age, gender and population fields were needed for this exercise, a new dataframe, *SGpop_gp* was created by using the *groupby()* function to group the dataset first by gender ('**Sex**'), then by age bracket ('**AG**). The sum of the corresponding population for each group was calculated using *summarise()* and  stored in the **Pop** field.
+Once again, data from the source *csv* file was imported into the R environment by using *read_csv()*. Since only the age, gender and population fields were needed for this exercise, a new dataframe, *SGpop_gp* was created by using the *groupby()* function to group the dataset first by gender (**Sex**), then by age bracket (**AG**). The sum of the corresponding population for each group was calculated using *summarise()* and  stored in the **Pop** field.
 
 ```{r echo=TRUE}
 SGpop <- read_csv("data/respopagesextod2021.csv")
@@ -125,6 +125,7 @@ kable(head(SGpop_gp))
 ```
 
 Additional adjustments to prepare the data for the *ggplot2* graph included:
+
   * Correcting the placement of the bars for the 5 to 9 years old age bracket
   * Changing the name of the gender columns to singular forms; and
   * Stipulating the order and text of the bars in *AG_new*.
@@ -145,7 +146,7 @@ AG_new <- c("0-4", "5-9", "10-14","15-19","20-24","25-29","30-34","35-39","40-44
 
 A population pyramid is a special kind of bar graph. In this instance, it displays male and female populations on side-by-side x-axes, with the 0 line down the middle. 
 
-To achieve this effect on ggplot2, the y-axis values for the *Male* population were made **negative** by applying a scalar multiplier of -1. This allows a “reflection” of the two graphs to be displayed along a common axis, separated by 0.
+To achieve this effect on ggplot2, the y-axis values for the **Male** population were made **negative** by applying a scalar multiplier of -1. This allows a “reflection” of the two graphs to be displayed along a common axis, separated by 0.
 
 For the chart to display the correct labels and tick marks along the *Population* axis for both **Male** and **Female**, *scale_y_continuous()* was use to set the appropriate intervals and their respective labels such that starting from the left hand side of the chart, labels decreased in equal steps from 200 to 0 before increasing in the same steps back to 200. *scale_x_discrete()* was then used to display the age brackets correctly using the ordered list prepared in *AG_new*.
 
@@ -184,6 +185,7 @@ GUI software such as Tableau have the following features:
   * It is very intuitive and easy to learn and use 
   * It is effective for visual pattern discovery
   * It has beautiful out-of-the-box visualisations
+
 However,it may be limited in its data manipulation options for complex analytics.
   
 On the other hand, programming languages such as R:
