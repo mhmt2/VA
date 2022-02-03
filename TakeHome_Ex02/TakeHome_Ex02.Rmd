@@ -81,7 +81,7 @@ AG_new <- c("0-4", "5-9", "10-14","15-19","20-24","25-29","30-34","35-39","40-44
 
 To determine which planning areas with sizeable populations of more than 100,000 residents were the oldest and youngest by percentage of population within the same planning area, appropriate filtering and manipulation was done. A tibble extract of the computed datatable is shown below with *pct_old* and *pct_yg* containing the respective percentages of old and young residents in each planning area. 
 
-By using the automatic sorting feature in the R datatable display view, it was determined that in 2020, the 3 oldest planning areas with populations larger than 100,000 were Bukit Merah, Ang Mo Kio and Kallang, while the 3 youngest were Woodlands, Punggol and Choa Chu Kang. 
+By using the automatic sorting feature in the R datatable display view, it was determined that in 2020, the 3 oldest planning areas with populations larger than 100,000 were **Bukit Merah, Ang Mo Kio and Kallang**, while the 3 youngest were **Woodlands, Punggol and Choa Chu Kang**. 
 
 ```{r echo=TRUE}
 #find PA with oldest population in 2020
@@ -192,7 +192,7 @@ plot2 <- ggplot(grp_Pop, aes(x = `AG`, y = `Pop`, fill = `Sex`)) +
 
 #slow down the transition between years
 
-animate (plot2, fps= 5) 
+animate (plot2, fps= 1) 
 
 ```
 ## Visualisation 2
@@ -248,6 +248,8 @@ The next section will zoom into Punggol's demographics.
 
 ## Visualisation 3
 ### Deep dive into Punggol 
+
+This visualisation shows 2 related views of Punggol's changing demographic. While an animated view allows us to observe in a single chart how Punggol's population shifted over 20 years, a faceted, static view gives us the option of checking details of each age band by year.
 
 Looking at how the population distribution in Punggol changed across the 20 years, it can be seen that Punggol is a relatively new town, with small numbers of young residents moving in only from 2002 onwards. From 2005 onwards, the growth of the 30-34 age group outpaced all the other age bands, possibly due to new flats being completed and young couples moving in. The thickening of the base of residents aged 10 and below started around 2014-2015, likely when the adult residents started forming family units and having children of their own. The older age bands also grew in tandem though not as rapidly as the younger age bands.
 
