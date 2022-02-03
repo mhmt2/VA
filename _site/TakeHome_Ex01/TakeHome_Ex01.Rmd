@@ -188,12 +188,12 @@ GUI software such as Tableau have the following features:
 
 However,it may be limited in its data manipulation options for complex analytics.
   
-On the other hand, programming languages such as R:
+On the other hand, a programming language such as R:
   
   * Has a longer learning curve and is less straightforward to use at the start
   * Yet, it has the benefit of **reproducibility** and **flexibility** to incorporate other features beyond visualisations (e.g. text write-ups, displaying code chunks, creating a blog/slides etc) **all in one script**. 
 
-As data analyst, especially one that specialises in data visualisation, it would be a good idea to develop basic familiarity with a range of GUI tools, and sufficient competency in at least one programmatic visualisation technique, so as to have the versatility to apply either or even both methods when required.  
+As a data analyst, especially one that specialises in data visualisation, it would be a good idea to develop basic familiarity with a range of GUI tools, and sufficient competency in at least one programmatic visualisation technique, so as to have the versatility to apply either or even both methods when required.  
 
 
 # References and Resources:

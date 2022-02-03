@@ -1,0 +1,355 @@
+---
+title: "ISSS608: AY2021-22(T2) Take-Home Exercise 2"
+description: |
+  To apply appropriate interactivity and animation methods to design an age-sex pyramid-based data visualisation to show the changes in Singapore's demographic structure by age cohort and gender between 2000-2020 at planning area level.
+  
+author:
+  - name: Melissa Tan
+    email: melissa.tan.2021@mitb.smu.edu.sg
+    affiliation: SMU MITB Analytics Track
+    affiliation_url: https://scis.smu.edu.sg/master-it-business/analytics-track/curriculum?gclid=CjwKCAiA3L6PBhBvEiwAINlJ9EJwYxpaZv-zPxR0UMntDh37TrlWU7jwXP9Dcu9jvWvN8uEJsOWzTRoCqrQQAvD_BwE
+    
+date: "`r Sys.Date()`"
+output: distill::distill_article
+---
+# Visualisation Approach 
+To address the requirements of the task, the following three visualisations will be created in this exercise:
+
+  1. Animated age-sex population pyramids showing the demographic changes in Singapore 
+    - across time, from 2000-2020 inclusive
+    - across planning areas
+    
+  2. An interactive facet plot comparing the 2020 age-sex population pyramids of the top 3 oldest and top 3 youngest planning areas.
+  
+  3. An in-depth, interactive view of a selected planning area, showing demographic pyramids for each year from 2000-2020. 
+
+A suite of packages were used to process the data and create the interactive charts. These included *tidyverse*, *knitr*, *ggiraph*, *plotly*, *gganimate* and *gifski*.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+```{r}
+packages = c('tidyverse', 'readxl', 'knitr','ggiraph','plotly','patchwork','gganimate','gapminder','DT','gifski',"gridExtra")
+
+for(p in packages){
+  if(!require(p, character.only = T)){
+    install.packages(p)
+  }
+  library(p, character.only = T)
+}
+```
+
+# Data preparation 
+Two datasets were obtained from the [Department of Statistics](https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data) website. They were *Singapore Residents by Planning Area / Subzone, Age Group, Sex and Type of Dwelling, June 2000-2010* and *Singapore Residents by Planning Area / Subzone, Age Group, Sex and Type of Dwelling, June 2011-2020*.
+
+Since the two datasets had the same column fields, the *rbind* function was used to join up the datasets to cover the entire time period. *group_by()* was then used to group the data by Year (Time), Planning Area (PA), Gender (Sex) and Age (AG). There were some rows with unsuable data (i.e. Planning Area was "Not Stated"). These 38 rows were removed from the dataset.
+
+```{r echo=TRUE}
+Pop1 <- read_csv("data/respopagesextod2000to2010.csv")
+Pop2 <- read_csv("data/respopagesextod2011to2020.csv")
+                  
+joined_Pop <- rbind(Pop1,Pop2)
+
+grp_Pop <- joined_Pop %>%
+  group_by(`Time`,`PA`,`Sex`,`AG`) %>%
+  summarise('Pop'=sum(`Pop`)) %>%
+  ungroup()
+
+grp_Pop$Time <- as.integer(grp_Pop$Time) 
+
+removed <- subset(grp_Pop, PA == "Not Stated")
+
+grp_Pop <- subset(grp_Pop, PA !="Not Stated")
+```
+
+```{r echo=FALSE}
+#to check how much data removed
+#summary(removed)
+#sum(removed$Pop)
+
+```
+
+```{r echo=FALSE}
+grp_Pop$AG[grp_Pop$AG=="5_to_9"] <- "05_to_9"
+
+grp_Pop$Sex[grp_Pop$Sex=="Females"] <- "Female"
+grp_Pop$Sex[grp_Pop$Sex=="Males"] <- "Male"
+
+AG_new <- c("0-4", "5-9", "10-14","15-19","20-24","25-29","30-34","35-39","40-44","45-49","50-54","55-59","60-64","65-69","70-74","75-79","80-84","85-89","90 & over")
+
+```
+
+To determine which planning areas with sizeable populations of more than 100,000 residents were the oldest and youngest by percentage of population within the same planning area, appropriate filtering and manipulation was done. A tibble extract of the computed datatable is shown below with *pct_old* and *pct_yg* containing the respective percentages of old and young residents in each planning area. 
+
+By using the automatic sorting feature in the R datatable display view, it was determined that in 2020, the 3 oldest planning areas with populations larger than 100,000 were Bukit Merah, Ang Mo Kio and Kallang, while the 3 youngest were Woodlands, Punggol and Choa Chu Kang. 
+
+```{r echo=TRUE}
+#find PA with oldest population in 2020
+
+pop2020 <- grp_Pop %>% filter(Time==2020) %>%
+  group_by(`PA`) %>%
+  summarise('Pop' = sum(`Pop`)) %>%
+  ungroup()
+
+
+pop2020_old <- grp_Pop %>% filter(Time==2020) %>%
+  filter(AG == '65_to_69' | AG=='70_to_74' | AG=='75_to_79'|AG=='80_to_84'|AG=='84_to_89'| AG =='90_and_over')%>%
+  group_by(`PA`) %>%
+  summarise('Pop' = sum(`Pop`)) %>%
+  ungroup()
+
+pop2020$pct_old <- pop2020_old$Pop / pop2020$Pop
+
+#find PA with highest % of young population in 2020
+
+pop2020_yg <- grp_Pop %>% filter(Time==2020) %>%
+  filter(AG == '30_to_35' | AG=='25_to_29' | AG=='20_to_24'|AG=='15_to_19'|AG=='10_to_14'| AG =='05_to_9' | AG=='0_to_4')%>%
+  group_by(`PA`) %>%
+  summarise('Pop' = sum(`Pop`)) %>%
+  ungroup()
+
+pop2020$pct_yg <- pop2020_yg$Pop / pop2020$Pop 
+
+pop2020_top <- pop2020 %>% filter(pop2020$Pop > 100000)
+
+head(pop2020_top)
+
+
+```
+
+
+```{r}
+bm <- subset(grp_Pop, PA == "Bukit Merah")
+amk <- subset(grp_Pop, PA == "Ang Mo Kio")
+klg <- subset(grp_Pop, PA == "Kallang")
+
+wld <- subset(grp_Pop, PA == "Woodlands")
+punggol <- subset(grp_Pop, PA =="Punggol")
+cck <- subset(grp_Pop, PA == "Choa Chu Kang")
+```
+## Visualisation 1: 
+### Animated Age-Sex pyramid for whole of Singapore by Year (2000-2020)
+
+This animated chart shows how the age-sex distribution in Singapore evolved over 20 years. As can be seen from the way the shape of the pyramid is changing, Singapore has an aging population, with the bulge of the pyramid moving upwards towards the older age groups as the years progress.
+
+The code chunk for this chart is shown below. The animation speed was slowed down for ease of observation.
+
+```{r echo=TRUE}
+
+grp_Pop$Pop[grp_Pop$Sex=="Male"] <- grp_Pop$Pop[grp_Pop$Sex=="Male"]*-1
+
+plot1 <- ggplot(grp_Pop, aes(x = `AG`, y = `Pop`, fill = `Sex`)) + 
+  geom_bar(data = subset(grp_Pop, Sex == "Female"), stat = "identity") + 
+  geom_bar(data = subset(grp_Pop, Sex == "Male"), aes(y=`Pop`), stat = "identity") + 
+  scale_y_continuous(name="Population ('000)", breaks = seq(-200000, 200000, 50000),
+                     labels = paste0(as.character(c(seq(200, 0, -50), seq(50, 200, 50))))) + 
+  scale_x_discrete(labels= AG_new)+
+  xlab("Age (Years)")+
+  coord_flip()+
+  theme(panel.background = element_rect(fill = "white",
+                                        colour="white",
+                                        size=0.5,
+                                        linetype="solid"),
+        panel.grid.major = element_line(size = 0.25,
+                                        linetype = 'solid',
+                                        colour = "lightgrey"),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  
+  labs(title="Age-Sex Population Pyramid of Singapore Residents: {frame_time}")+
+  transition_time(Time)+
+  ease_aes('linear')
+
+#slow down the transition between years
+
+animate (plot1, fps= 5) 
+
+```
+### Animated Age-Sex pyramid for whole of Singapore by Planning Area
+Next, a similar chart was created to show how Singapore's age-sex distribution changes across the planning areas over the entire period of 2000-2020. The difference in the code for this chart is the use of *{next_state}* instead of *{frame_time}* to control the dynamic chart title, as well as the use of *transition_states(PA)* instead of *transition_time(Time)* to change the variable used to control the animation.
+
+```{r}
+ 
+plot2 <- ggplot(grp_Pop, aes(x = `AG`, y = `Pop`, fill = `Sex`)) + 
+  geom_bar(data = subset(grp_Pop, Sex == "Female"), stat = "identity") + 
+  geom_bar(data = subset(grp_Pop, Sex == "Male"), aes(y=`Pop`), stat = "identity") + 
+  scale_y_continuous(name="Population ('000)", breaks = seq(-200000, 200000, 50000),
+                     labels = paste0(as.character(c(seq(200, 0, -50), seq(50, 200, 50))))) + 
+  scale_x_discrete(labels= AG_new)+
+  xlab("Age (Years)")+
+  coord_flip()+
+  theme(panel.background = element_rect(fill = "white",
+                                        colour="white",
+                                        size=0.5,
+                                        linetype="solid"),
+        panel.grid.major = element_line(size = 0.25,
+                                        linetype = 'solid',
+                                        colour = "lightgrey"),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  
+  labs(title="Age-Sex Population Pyramid of Singapore Residents:{next_state}")+
+  transition_states(PA)+
+  ease_aes('linear')
+
+#slow down the transition between years
+
+animate (plot2, fps= 5) 
+
+```
+## Visualisation 2
+
+### Facet view of top 3 oldest and youngest PA by percentage of population in 2020
+
+For this visualisation, ggplotly was used to create interactive charts that automatically displays tooltips containing key information regarding the age band, population, and gender when the cursor hovers over each bar. This being the case, the y-axis tick labels were removed for a cleaner visual.
+
+```{r}
+pop2020_sub <- subset(grp_Pop, PA == "Bukit Merah"|PA == "Ang Mo Kio"|PA =="Kallang"|PA=="Woodlands"|PA=="Punggol"|PA=="Choa Chu Kang")
+
+
+pop2020_sub$PA <- factor(pop2020_sub$PA,levels = c("Bukit Merah", "Ang Mo Kio", "Kallang", "Woodlands","Punggol","Choa Chu Kang"))
+
+
+plot2 <- ggplot(pop2020_sub, aes(x = `AG`, y = `Pop`, fill = `Sex`)) + 
+  geom_bar(data = subset(pop2020_sub, Sex == "Female"), stat = "identity") + 
+  geom_bar(data = subset(pop2020_sub, Sex == "Male"), aes(y=`Pop`), stat = "identity") + 
+  scale_y_continuous(name="Population ('000)", breaks = seq(-200000, 200000, 50000),
+                     labels = paste0(as.character(c(seq(200, 0, -50), seq(50, 200, 50))))) + 
+  scale_x_discrete(labels= AG_new)+
+  xlab("Age (Years)")+
+  coord_flip()+
+  facet_wrap(~PA)+
+  theme(axis.text=element_text (size=5),
+        legend.position = "bottom",
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        panel.background = element_rect(fill = "white",
+                                        colour="white",
+                                        size=0.5,
+                                        linetype="solid"),
+        panel.grid.major = element_line(size = 0.25,
+                                        linetype = 'solid',
+                                        colour = "lightgrey"),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+
+ggplotly(plot2+
+           labs(title = "Top 3 Oldest and Youngest Planning Areas in 2020"))
+
+
+
+```
+
+It can be easily observed from this facet plot that the 3 planning areas in the top row are much more aged than the 3 planning areas at the bottom row by looking at their comparatively narrow bases and thicker bulges at ages 65 and above. 
+
+Similarly, for the 3 planning areas in the bottom row, they are comparatively more broad-based, with longer bars in the middle, indicating relatively larger young adult, middle-aged populations. 
+
+Punggol has an interesting shape, similar to 2 mini pyramids stacked one on top another. On closer observation, this could be indicative of younger families (i.e. young parents in their 30s, with young kids ages 10 and below) living in the area. 
+
+The next section will zoom into Punggol's demographics.
+
+## Visualisation 3
+### Deep dive into Punggol 
+
+Looking at how the population distribution in Punggol changed across the 20 years, it can be seen that Punggol is a relatively new town, with small numbers of young residents moving in only from 2002 onwards. From 2005 onwards, the growth of the 30-34 age group outpaced all the other age bands, possibly due to new flats being completed and young couples moving in. The thickening of the base of residents aged 10 and below started around 2014-2015, likely when the adult residents started forming family units and having children of their own. The older age bands also grew in tandem though not as rapidly as the younger age bands.
+
+```{r}
+
+plot3 <- ggplot(punggol, aes(x = `AG`, y = `Pop`, fill = `Sex`)) + 
+  geom_bar(data = subset(punggol, Sex == "Female"), stat = "identity") + 
+  geom_bar(data = subset(punggol, Sex == "Male"), aes(y=`Pop`*-1), stat = "identity") + 
+  scale_y_continuous(name="Population ('000)", breaks = seq(-200000, 200000, 50000),
+                     labels = paste0(as.character(c(seq(200, 0, -50), seq(50, 200, 50))))) + 
+  scale_x_discrete(labels= AG_new)+
+  xlab("Age (Years)")+
+  coord_flip()+
+  theme(legend.position = "none",
+        panel.background = element_rect(fill = "white",
+                                        colour="white",
+                                        size=0.5,
+                                        linetype="solid"),
+        panel.grid.major = element_line(size = 0.25,
+                                        linetype = 'solid',
+                                        colour = "lightgrey"),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  
+  labs(title="Age-Sex Population Pyramid of Punggol Residents: {frame_time}")+
+  transition_time(Time)+
+  ease_aes('linear')
+
+#slow down the transition between years
+
+animate (plot3, fps= 5)
+
+
+### Facet view of Punggol 2000-2020
+punggol$Pop[punggol$Sex=="Male"] <- punggol$Pop[punggol$Sex=="Male"]*-1
+plot4 <- ggplot(punggol, aes(x = `AG`, y = `Pop`, fill = `Sex`)) + 
+  geom_bar(data = subset(punggol, Sex == "Female"), stat = "identity") + 
+  geom_bar(data = subset(punggol, Sex == "Male"), aes(y=`Pop`), stat = "identity") + 
+  scale_y_continuous(name="Population ('000)", breaks = seq(-200000, 200000, 50000),
+                     labels = paste0(as.character(c(seq(200, 0, -50), seq(50, 200, 50))))) + 
+  scale_x_discrete(labels= AG_new)+
+  xlab("Age (Years)")+
+  coord_flip()+
+  facet_wrap(~Time)+
+  theme(axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        legend.position = "none",
+        panel.background = element_rect(fill = "white",
+                                        colour="white",
+                                        size=0.5,
+                                        linetype="solid"),
+        panel.grid.major = element_line(size = 0.25,
+                                        linetype = 'solid',
+                                        colour = "lightgrey"),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+
+
+ggplotly(plot4+
+           labs(title = "Year-on-Year view of Age-Sex Pyramid for Punggol"))
+
+```
+## Challenges faced
+
+  1. Deciding on the narrative arc for the visualisations required planning ahead to ensure sufficient data processing was done up front. Even so, some iterative data manipulation was still required after gaining new insights from the charts. For e.g. the deep dive into Punggol was done after observing that it had an unusual pyramid shape compared to the other planning areas.
+  
+  2. While the use of packages such as *plotly* made basic interactive plots very easy to produce, much care had to be taken with the formatting of the axes and labels to improve the overall look and feel of the visual.
+  
+  3. Given time constraints and limited skills in R, the desired visualisation approach could not be fulfilled. The initial idea was to use a geographical map of Singapore to provide an interactive display of the planning areas and their relative locations from one another. Clicking on any one planning area would take the user to another dashboard displaying an animation of the change in demographic profile with time for that area. Using the *rgdal* and *broom* libraries and a shapefile from the URA 2014 Masterplan, an interactive map with the planning area boundaries was created as shown below, but the clickable features could not be produced this time around.  
+
+```{r}
+##inserting map
+
+library(rgdal)
+library(broom)
+
+shp <- readOGR( 
+  dsn= paste0(getwd(),"/data/master-plan-2014-planning-area-boundary-web/master-plan-2014-planning-area-boundary-web-shp") , 
+  layer="MP14_PLNG_AREA_WEB_PL",
+  verbose=FALSE
+)
+
+shp_df = fortify(shp)
+shp_df$id <- as.integer(shp_df$id) 
+
+# Recover Planning Area info 
+temp_df <- data.frame(shp@data$PLN_AREA_N)
+names(temp_df) <- c("PLN_AREA_N")
+
+# Create and append "id"
+temp_df$id <- seq(0,nrow(temp_df)-1)
+
+
+new_shp_df <- left_join(shp_df, temp_df, by="id")
+
+
+cnames <- aggregate(cbind(long, lat) ~ `PLN_AREA_N`, data=new_shp_df, FUN=mean)
+
+map <- ggplot() +
+  geom_polygon(data = new_shp_df, aes( x = long, y = lat, group = group), fill="#69b3a2", color="white") +
+  geom_text(data = cnames, aes(x = long, y = lat, label = `PLN_AREA_N`), size = 1.5) + 
+  theme_void() 
+
+map2 = ggplotly(map)
+
+map2
+```
