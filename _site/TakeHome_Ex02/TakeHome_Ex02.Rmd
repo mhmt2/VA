@@ -126,6 +126,7 @@ klg <- subset(grp_Pop, PA == "Kallang")
 wld <- subset(grp_Pop, PA == "Woodlands")
 punggol <- subset(grp_Pop, PA =="Punggol")
 cck <- subset(grp_Pop, PA == "Choa Chu Kang")
+punggol$Pop[punggol$Sex=="Male"] <- punggol$Pop[punggol$Sex=="Male"]*-1
 ```
 ## Visualisation 1: 
 ### Animated Age-Sex pyramid for whole of Singapore by Year (2000-2020)
@@ -166,6 +167,8 @@ animate (plot1, fps= 5)
 ```
 ### Animated Age-Sex pyramid for whole of Singapore by Planning Area
 Next, a similar chart was created to show how Singapore's age-sex distribution changes across the planning areas over the entire period of 2000-2020. The difference in the code for this chart is the use of *{next_state}* instead of *{frame_time}* to control the dynamic chart title, as well as the use of *transition_states(PA)* instead of *transition_time(Time)* to change the variable used to control the animation.
+
+This method of visualising the population distribution by planning area is *not* ideal as the animation of the bar chart is clumsy and does not provide useful information to the user. Areas where there are no residents appear as a blank canvas which is awkward and unappealing. An interactive map view with a heat map showing relative population numbers would have been more appropriate in this case (See below **Challenges faced** section, Point 3, for more details).
 
 ```{r}
  
@@ -301,8 +304,6 @@ animate (plot3, fps= 5)
 
 
 ### Facet view of Punggol 2000-2020
-punggol$Pop[punggol$Sex=="Male"] <- punggol$Pop[punggol$Sex=="Male"]*-1
-
 plot4 <- ggplot(punggol, aes(x = `AG`, y = `Pop`, fill = `Sex`)) + 
   geom_bar(data = subset(punggol, Sex == "Female"), stat = "identity") + 
   geom_bar(data = subset(punggol, Sex == "Male"), aes(y=`Pop`), stat = "identity") + 
