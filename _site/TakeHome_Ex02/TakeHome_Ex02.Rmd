@@ -199,7 +199,9 @@ animate (plot2, fps= 1)
 
 ### Facet view of top 3 oldest and youngest PA by percentage of population in 2020
 
-For this visualisation, ggplotly was used to create interactive charts that automatically displays tooltips containing key information regarding the age band, population, and gender when the cursor hovers over each bar. This being the case, the y-axis tick labels were removed for a cleaner visual.
+For this visualisation, *ggiraph* was used to create interactive charts that automatically displays a customised tooltip containing key information regarding the age band, population, and gender when the cursor hovers over each bar. This being the case, the y-axis tick labels were removed for a cleaner visual.
+
+When the cursor hovers over the selected age band, all the data within the same age band is similarly highlighted, while the other bars fade out. 
 
 ```{r}
 pop2020_sub <- subset(grp_Pop, PA == "Bukit Merah"|PA == "Ang Mo Kio"|PA =="Kallang"|PA=="Woodlands"|PA=="Punggol"|PA=="Choa Chu Kang")
@@ -207,10 +209,15 @@ pop2020_sub <- subset(grp_Pop, PA == "Bukit Merah"|PA == "Ang Mo Kio"|PA =="Kall
 
 pop2020_sub$PA <- factor(pop2020_sub$PA,levels = c("Bukit Merah", "Ang Mo Kio", "Kallang", "Woodlands","Punggol","Choa Chu Kang"))
 
+F <-subset(pop2020_sub, Sex == "Female") 
+F$tooltip <- c(paste0("Gender = ", F$Sex, "\n Age = ", F$AG, "\n Population = ", F$Pop))
 
-plot2 <- ggplot(pop2020_sub, aes(x = `AG`, y = `Pop`, fill = `Sex`)) + 
-  geom_bar(data = subset(pop2020_sub, Sex == "Female"), stat = "identity") + 
-  geom_bar(data = subset(pop2020_sub, Sex == "Male"), aes(y=`Pop`), stat = "identity") + 
+M <- subset(pop2020_sub,Sex == "Male")
+M$tooltip <- c(paste0("Gender = ", M$Sex, "\n Age = ", M$AG, "\n Population = ", M$Pop*-1))
+
+plot2 <- ggplot(pop2020_sub, aes(x = `AG`, y = `Pop`, fill = `Sex`, data_id= `AG`)) + 
+  geom_bar_interactive(data = subset(pop2020_sub, Sex == "Female"), aes(tooltip = F$tooltip), stat = "identity") + 
+  geom_bar_interactive(data = subset(pop2020_sub, Sex == "Male"),aes(tooltip = M$tooltip), stat = "identity")  +
   scale_y_continuous(name="Population ('000)", breaks = seq(-200000, 200000, 50000),
                      labels = paste0(as.character(c(seq(200, 0, -50), seq(50, 200, 50))))) + 
   scale_x_discrete(labels= AG_new)+
@@ -228,16 +235,27 @@ plot2 <- ggplot(pop2020_sub, aes(x = `AG`, y = `Pop`, fill = `Sex`)) +
         panel.grid.major = element_line(size = 0.25,
                                         linetype = 'solid',
                                         colour = "lightgrey"),
-        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  labs(title = "Top 3 Oldest (top) and Youngest (bottom) Planning Areas in 2020")
 
 
-ggplotly(plot2+
-           labs(title = "Top 3 Oldest and Youngest Planning Areas in 2020"))
+
+
+girafe(                                  
+  ggobj = plot2,                             
+  width_svg = 6,                         
+  height_svg = 6*0.618,
+  options = list(
+    opts_hover(css = "opacity:1;"),
+    opts_hover_inv(css = "opacity:0.2;"),
+    opts_tooltip()
+  )
+)
 
 
 
 ```
-
+#### OBSERVATIONS
 It can be easily observed from this facet plot that the 3 planning areas in the top row are much more aged than the 3 planning areas at the bottom row by looking at their comparatively narrow bases and thicker bulges at ages 65 and above. 
 
 Similarly, for the 3 planning areas in the bottom row, they are comparatively more broad-based, with longer bars in the middle, indicating relatively larger young adult, middle-aged populations. 
@@ -249,15 +267,15 @@ The next section will zoom into Punggol's demographics.
 ## Visualisation 3
 ### Deep dive into Punggol 
 
-This visualisation shows 2 related views of Punggol's changing demographic. While an animated view allows us to observe in a single chart how Punggol's population shifted over 20 years, a faceted, static view gives us the option of checking details of each age band by year.
+This visualisation shows 2 related views of Punggol's changing demographic. While an animated view allows us to observe in a single chart how Punggol's population shifted over 20 years, a faceted, interactive view gives us the option of checking details of each age band by year.
 
+#### Observations
 Looking at how the population distribution in Punggol changed across the 20 years, it can be seen that Punggol is a relatively new town, with small numbers of young residents moving in only from 2002 onwards. From 2005 onwards, the growth of the 30-34 age group outpaced all the other age bands, possibly due to new flats being completed and young couples moving in. The thickening of the base of residents aged 10 and below started around 2014-2015, likely when the adult residents started forming family units and having children of their own. The older age bands also grew in tandem though not as rapidly as the younger age bands.
 
 ```{r}
-
-plot3 <- ggplot(punggol, aes(x = `AG`, y = `Pop`, fill = `Sex`)) + 
+plot3 <- ggplot(punggol, aes(x = `AG`, y = `Pop`, fill = `Sex`)) +
   geom_bar(data = subset(punggol, Sex == "Female"), stat = "identity") + 
-  geom_bar(data = subset(punggol, Sex == "Male"), aes(y=`Pop`*-1), stat = "identity") + 
+  geom_bar(data = subset(punggol, Sex == "Male"), aes(y=`Pop`), stat = "identity") + 
   scale_y_continuous(name="Population ('000)", breaks = seq(-200000, 200000, 50000),
                      labels = paste0(as.character(c(seq(200, 0, -50), seq(50, 200, 50))))) + 
   scale_x_discrete(labels= AG_new)+
@@ -284,6 +302,7 @@ animate (plot3, fps= 5)
 
 ### Facet view of Punggol 2000-2020
 punggol$Pop[punggol$Sex=="Male"] <- punggol$Pop[punggol$Sex=="Male"]*-1
+
 plot4 <- ggplot(punggol, aes(x = `AG`, y = `Pop`, fill = `Sex`)) + 
   geom_bar(data = subset(punggol, Sex == "Female"), stat = "identity") + 
   geom_bar(data = subset(punggol, Sex == "Male"), aes(y=`Pop`), stat = "identity") + 
@@ -303,12 +322,10 @@ plot4 <- ggplot(punggol, aes(x = `AG`, y = `Pop`, fill = `Sex`)) +
         panel.grid.major = element_line(size = 0.25,
                                         linetype = 'solid',
                                         colour = "lightgrey"),
-        panel.border = element_rect(colour = "black", fill=NA, size=0.5))
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5))+
+  labs(title = "Year-on-Year view of Age-Sex Pyramid for Punggol")
 
-
-ggplotly(plot4+
-           labs(title = "Year-on-Year view of Age-Sex Pyramid for Punggol"))
-
+ggplotly(plot4)
 ```
 ## Challenges faced
 
