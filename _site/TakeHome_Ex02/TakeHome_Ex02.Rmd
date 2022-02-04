@@ -279,12 +279,13 @@ Looking at how the population distribution in Punggol changed across the 20 year
 plot3 <- ggplot(punggol, aes(x = `AG`, y = `Pop`, fill = `Sex`)) +
   geom_bar(data = subset(punggol, Sex == "Female"), stat = "identity") + 
   geom_bar(data = subset(punggol, Sex == "Male"), aes(y=`Pop`), stat = "identity") + 
-  scale_y_continuous(name="Population ('000)", breaks = seq(-200000, 200000, 50000),
-                     labels = paste0(as.character(c(seq(200, 0, -50), seq(50, 200, 50))))) + 
+  scale_y_continuous(name="Population ('000)", breaks = seq(-20000, 20000, 5000),
+                     labels = paste0(as.character(c(seq(20, 0, -5), seq(5, 20, 5))))) + 
   scale_x_discrete(labels= AG_new)+
   xlab("Age (Years)")+
   coord_flip()+
-  theme(legend.position = "none",
+  theme(axis.text.x= element_text(),
+        legend.position = "none",
         panel.background = element_rect(fill = "white",
                                         colour="white",
                                         size=0.5,
