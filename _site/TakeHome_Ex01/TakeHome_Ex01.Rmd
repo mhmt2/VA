@@ -154,7 +154,7 @@ Finally, *coord_flip()* was used to display the bars horizontally, creating the 
 
 The R code and final population pyramid chart are shown below:
 
-```{r}
+```{r echo=TRUE}
 
 ggplot(SGpop_gp, aes(x = `AG`, y = `Pop`, fill = `Sex`)) + 
   geom_bar(data = subset(SGpop_gp, Sex == "Female"), stat = "identity") + 
