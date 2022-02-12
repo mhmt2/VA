@@ -35,6 +35,6 @@ knitr::include_graphics("DV01_Dashboard02.png")
 ```
 
 
-# This is where i incldue the link for data prep. ["data prep steps"](C:\mhmt2\VA\DataViz_01/DataPrep/DataPrep_DV1.html).
+# This is where i incldue the link for data prep. ["data prep steps"](https://mviz.netlify.app/dataviz_01/dataprep/dataprep_dv1).
 
 
