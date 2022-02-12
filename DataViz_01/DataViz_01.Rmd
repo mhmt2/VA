@@ -1,0 +1,36 @@
+---
+title: "ISSS608: AY2021-22(T2): DataViz Makeover 1"
+description: |
+  A new article created using the Distill format.
+  
+author:
+  - name: Melissa Tan
+    email: melissa.tan.2021@mitb.smu.edu.sg
+    affiliation: SMU MITB Analytics Track
+    affiliation_url: https://scis.smu.edu.sg/master-it-business/analytics-track/curriculum?gclid=CjwKCAiA3L6PBhBvEiwAINlJ9EJwYxpaZv-zPxR0UMntDh37TrlWU7jwXP9Dcu9jvWvN8uEJsOWzTRoCqrQQAvD_BwE
+date: "`r Sys.Date()`"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+packages = c('tidyverse','knitr')
+
+for(p in packages){
+  if(!require(p, character.only = T)){
+    install.packages(p)
+  }
+  library(p, character.only = T)
+}
+```
+
+```{r}
+knitr::include_graphics("DV01_Dashboard01.png")
+```
+```{r fig.cap="Data source from https://stats.mom.gov.sg/Pages/LabourForceTimeSeries.aspx", out.extra="class=external"}
+knitr::include_graphics("DV01_Dashboard02.png")
+```
+
