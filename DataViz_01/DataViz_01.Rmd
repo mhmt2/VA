@@ -147,7 +147,7 @@ Tableau Prep was used to clean and pre-process the data. Tableau Desktop was use
 
 ### Observation 1: Singapore's Labour Force Participation Rate across all demographic profiles stayed resilient in spite of COVID-19, with the exception of first-jobbers
 
-```{r}
+```{r, fig.align='center'}
 knitr::include_graphics("LPFR(Overall).png")
 ```
 
