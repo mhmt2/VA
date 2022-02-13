@@ -208,10 +208,138 @@ knitr::include_graphics("images/DV1_22.png")
 
 
 ## Chart 2 - Changes in LFPR with Age
-## Step 15: 
-Create a new worksheet and set up the axes of Chart 1 by dragging the Year and LFPR(Total) fields in the left hand menu into the Columns and Row Shelves respectively. To view the data by age segments, drag the Age field into the Color and Label boxes for the default colours and labels to show.
+This chart shows how the LFPR changes across the working lifespan of residents, as well as the spread for each demographic group over the years.
 
+## Step 23: 
+Create a new worksheet and set up the axes of Chart 2 by dragging the Age and LFPR(Total) fields in the left hand menu into the Columns and Row Shelves respectively. To view the data by age segments, drag the Year field into the Color box. In the Analytics tab on the top left hand corner of the sidebar, add an Average Line for each cell. Make the lines orange so it stands out and display the values under each line.
+
+Add the title and insights, matching the text colours with the graph labels for easier reference. The final chart should look like this.
 ```{r}
-knitr::include_graphics("images/DV1_15.png")
+knitr::include_graphics("images/DV1_24.png")
 ```
 
+## Chart 3 - Older Ages' LFPR have a wider spread
+This chart investigates in greater detail how the LFPR of older workers changed over time.
+
+## Step 24: 
+Create a duplicate of Chart 2. Filter and retain the age groups from 55 and above. Select Box Plot from the Analytics tab and add a plot for each cell.
+```{r}
+knitr::include_graphics("images/DV1_25.png")
+```
+
+Add annotations to flag out the increase in LFPR for the 65-69 age group. Add title and insights, matching the text colours with the graph labels for easier reference. The final chart should look like this.
+
+```{r}
+knitr::include_graphics("images/DV1_26.png")
+```
+
+## Chart 4 - Overall LFPR by Gender
+This chart show how the LPFR of Males and Females changed over time.
+
+## Step 25: 
+Create a new worksheet and set up the axes of Chart 4 by dragging the Year field to the Column Shelf and both LFPR(F) and LFPR(M) fields to the Row Shelf. Select Dual Axis to over the 2 lines on the same axes and select Synchronise Axes to allow the removal of the y-axis on the right hand side.
+
+Drag the Age field to the Detail box. Filter and retain on the aggregate values i.e. Females and Males. 
+
+```{r}
+knitr::include_graphics("images/DV1_27.png")
+```
+
+## Step 26: 
+At the sidebar Marks menu, change the chart type from Automatic to Area for both lines. Change the colours to show blue for Males and pink for Females.
+
+```{r}
+knitr::include_graphics("images/DV1_28.png")
+```
+
+## Step 27: 
+Since we are using this chart to zoom into the gender difference, adjust the y-axis to a fixed range from 50 to 80 so that we can take a close-up look. Show the mark labels for both Male and Female.
+
+```{r}
+knitr::include_graphics("images/DV1_29.png")
+```
+
+Your final Chart 4 should look like this:
+```{r}
+knitr::include_graphics("images/DV1_30.png")
+```
+
+## Chart 5 - Overall LFPR Gender Gap
+This chart show how the gap between the LPFR of Males and Females changed over time.
+
+## Step 25: 
+Create a new worksheet and set up the axes of Chart 5 by dragging the Year(AggDiff) field to the Column Shelf and the LFPR(AggDiff) field to the Row Shelf. from the Colour box, change the Effects of the markers to show the points at each year.
+
+```{r}
+knitr::include_graphics("images/DV1_31.png")
+
+
+```
+
+## Step 26: 
+Add a reference line to show the starting year value (20.0%) and include annotations to explain how the gap was calculated. Add title and insights.
+
+```{r}
+knitr::include_graphics("images/DV1_32.png")
+
+```
+Your final Chart 5 should look like this:
+
+```{r}
+knitr::include_graphics("images/DV1_33.png")
+
+```
+## Chart 6 - Age-segmented LFPR Gender Gap
+This chart show how the gap between the LPFR of Males and Females differed across the demographic profiles
+
+## Step 25: 
+Create a new worksheet and set up the axes of Chart 6 by dragging the Year field to the Column Shelf and the Gender Diff field to the Row Shelf. Drag Age field into the Colour box
+
+## Step 26: 
+Change the colours of the different age groups by highlighting the interesting lines only (20-24, 25-29, 70-74, 75 & Over) while greying out the rest. 
+
+Select the 2021 data points of these 4 highlighted lines and Show Label.
+
+## Step 27: 
+Use matching colours in the insights text to reference the relevant age groups' chart lines.
+
+```{r}
+knitr::include_graphics("images/DV1_34.png")
+
+```
+
+The final Chart 5 should look like this:
+
+```{r}
+knitr::include_graphics("images/DV1_35.png")
+
+```
+
+## Chart 7 - Zoomed in  view of Gender Gap for Young Adults
+This chart shows a close up of how the LFPR gap changed for the 20-29 age groups over time.
+
+## Step 28: 
+Create a new worksheet and set up the axes of Chart 7 by dragging the Year field to the Column Shelf and the 2 Gender Diff fields to the Row Shelf. Filter and retain only the 20-24 age group.
+
+Select Line for the first Mark and Area of the second Mark and Select Dual Axis to overlay the 2 plots. This allows the area chart to have a more prominent outline.
+
+```{r}
+knitr::include_graphics("images/DV1_36.png")
+
+```
+
+
+## Step 26: 
+Change the colours of the different age groups by highlighting the interesting lines only (20-24, 25-29, 70-74, 75 & Over) while greying out the rest. 
+
+Select the 2021 data points of these 4 highlighted lines and Show Label.
+
+## Step 27: 
+Use matching colours in the insights text to reference the relevant age groups' chart lines.
+
+```{r}
+knitr::include_graphics("images/DV1_34.png")
+
+```
+
+The final Chart 5 should look like this:

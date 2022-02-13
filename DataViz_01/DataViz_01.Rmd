@@ -121,7 +121,7 @@ The proposed alternative visualisation has 2 intentions:
 
 4. **Formatting**: Consistent and distinctively different fonts for titles and subtitles (for insights)
 
-5. **Inking**: For visual content that do no contain actual data or that plays a supporting role were rendered light grey, e.g. Age segments that were less interesting, reference lines, labels, major gridlines. 
+5. **Inking**: For visual content that do no contain actual data or that plays a supporting role were rendered light grey, e.g. Age segments that were less interesting, reference lines, labels, major gridlines. Sharper, more saturated colours were used to highlight important observations with the backgrounded data rendered in lighter grey or less saturated colours. 
 
 ## 3. Proposed Visualiation on Tableau
 
