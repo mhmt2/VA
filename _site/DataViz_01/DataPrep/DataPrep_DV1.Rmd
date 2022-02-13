@@ -174,7 +174,7 @@ knitr::include_graphics("images/DV1_17.png")
 ## Step 18: 
 To change the axis range and title, open the Edit Axis dialog box by right-clicking at the horizontal axis. Choose a fixed range (2010-2022) and remove the title since the axis value are self-explanatory.
 
-```{r}
+```{r,out.height="40%",out.width="40%", fig.align='center'}
 knitr::include_graphics("images/DV1_18.png")
 ```
 
@@ -351,7 +351,7 @@ knitr::include_graphics("images/DV1_38.png")
 
 The final Chart 7 should look like this:
 
-```{r}
+```{r,fig.align='center'}
 knitr::include_graphics("images/DV1_39.png")
 
 ```
@@ -364,7 +364,7 @@ Repeat Steps 28 to 30 but use the 24-29 Age filter instead.
 
 Chart 8 should look similar, like this:
 
-```{r}
+```{r, fig.align='center'}
 knitr::include_graphics("images/DV1_40.png")
 
 ```

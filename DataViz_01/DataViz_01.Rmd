@@ -1,7 +1,7 @@
 ---
 title: "ISSS608: AY2021-22(T2): DataViz Makeover 1"
 description: |
-  The objective of the DataViz Makeovere is to explore different perspectives and approaches for designing more truthful and enlightening data visualisation. 
+  The objective of the DataViz Makeover is to explore different perspectives and approaches for designing more truthful and enlightening data visualisation. 
   
 author:
   - name: Melissa Tan
@@ -59,6 +59,7 @@ Overall, the visualisation is assessed to be "Beautiful yet Confusing".
   
 
   2. **Age Levels**: The visualisation comprised of many age levels taken directly from the dataset. This is problematic in 2 areas. 
+  
       + Firstly, There are overlapping categories i.e. Age-Groups *70 & Over*, *70 to 74* and *75 & Over*. Not correcting this will result in double counting. 
     
       + Next, the arrangement and sequencing of the age levels along the x-axis is also incorrect. Conventionally, age is widely understood as a variable with a fixed interval order, with values arranged either in ascending or descending order (from young to old or vice versa). The age-groups in this visualisation seem to have been rearranged in order of increasing Labour Force Participation Rate (LFPR) levels. This has resulted in the *15-19* age group being sandwiched between *70 & Over* and *70 to 74*, *20 to 24* appearing between *55 to 59* and *50 to 54* which is not only counter-intuitive, but it also makes it difficult for viewers to understand how the LFPR changes as a person matures.    
@@ -70,7 +71,7 @@ Overall, the visualisation is assessed to be "Beautiful yet Confusing".
 
 ## Aesthetic
 
-  1. **Use of colours**: The choice of pastel colours made the chart less harsh on the eyes. The shading of the areas under each line chart was somewhat helpful in demonstrating relative difference in LFPR values.  However, there is a missed opportunity in that the colours, which are all of the same intensity and seemingly randomly allocated, do not encode additional meaning or information other than indicating the different levels. Colors that are different for no reason tempts the viewer to search for a meaning for the differences.  
+  1. **Use of colours**: The choice of pastel colours made the chart less harsh on the eyes. The shading of the areas under each line chart was somewhat helpful in demonstrating relative difference in LFPR values.  However, there is a missed opportunity in that the colours, which are all of the same intensity and seemingly randomly allocated, do not encode additional meaning or information other than indicating the different levels. Colors that are different for no reason tempts the viewer to search for a meaning for the differences and might be misleading.  
   
   2. **Inking**: With the exception of the axis labels, all the other tick marks and grid lines were faded out. However, it was not clear what purpose the grid lines served since the charts are so compressed that it's difficult to figure out the x-axis labels where the gridlines connect. Further, the repeated occurrences of the highlighted Year x-axis label clutters up the chart and distract the eye.
   
@@ -81,8 +82,7 @@ Overall, the visualisation is assessed to be "Beautiful yet Confusing".
 
 A sketch of the proposed alternative visualisation design is shown below:
   
-```{r}
-
+```{r, out.width="70%", out.height="70%", fig.align='center'}
 
 knitr::include_graphics("Sketch.jpg")
 ```
@@ -90,9 +90,11 @@ knitr::include_graphics("Sketch.jpg")
 The proposed alternative visualisation has 2 intentions:
 
 ## Clarity
-1. **Data presented**: Similar to the original visualisation, the proposed solution will demonstrate big picture trends of how LFPR in Singapore has changed with time. Since the original visualisation used aged segments in steps of 5, similar segmentation will be done for the Makeover with steps taken to mitigate confusion regarding the many levels. 
+1. **Data presented**: Similar to the original visualisation, the proposed solution will demonstrate big picture trends of how LFPR in Singapore has changed with time. Since the original visualisation used aged segments in steps of 5 years, similar segmentation will be done for the Makeover with additional effort taken to mitigate confusion regarding the many levels. 
  
-   + To give more insights to the viewer, time will be interpreted in 2 dimensions - the 12 year period from 2010-2021, as well as the working lifespan from 15 years old onwards. Next, the visualisation will maximise the information available in the dataset with a more focused view of the gender segments. Where appropriate, zoomed in views of interesting observations will be provided as well.  
+   + To give more insights to the viewer, time will be interpreted in 2 dimensions - the 12 year period from 2010-2021, as well as the working lifespan from 15 years old through to 75 years and over. 
+   
+   + Next, the visualisation will maximise the information available in the dataset with a more focused analysis of the gender segments. Where appropriate, zoomed in views of interesting observations will be provided as well.  
 
 2. **Chart type**: The line chart format will be kept, with the parallel x-axes layout changed to improve readability. For the additional visualisations, boxplot and dot strips were also used where they were more effective in communicating the data.
 
@@ -113,7 +115,7 @@ The proposed alternative visualisation has 2 intentions:
 
 ## Aesthetic
 
-1. **Layout**: Used Dashboard to create a balanced layout where all charts are aligned along the width of a page. Entire visualisation comprised 2 Dashboards that fits into a 1 page view
+1. **Layout**: Used Dashboard to create a balanced layout where all charts are aligned along the width of a page. Visually, charts with the aggregate/broader overview will be placed at the top and/or left hand side, while the zoomed in/ segmented views will be at the lower half or to the right hand side of the dahsboard. The entire visualisation comprises 2 Dashboards that fits into a 1 page view which can be used together or separately if desired.
 
 2. **Legend***: Removed need for legend by using colours to differentiate the levels
 
@@ -139,28 +141,28 @@ knitr::include_graphics("DV01_Dashboard02.png")
 
 ## 4. Step-by-Step Data Preparation
 
-Tableau Prep was used to clean and pre-process the data. Tableau Desktop was used for the visualisations. To reproduce this visualisation makeover, detailed steps can be found at the ["Data Prep section"](https://mviz.netlify.app/dataviz_01/dataprep/dataprep_dv1).
+Tableau Prep was used to clean and pre-process the data. Tableau Desktop was used for the visualisations. To reproduce this visualisation makeover, detailed steps can be found at the ["Data Prep Log"](https://mviz.netlify.app/dataviz_01/dataprep/dataprep_dv1) section.
 
 ## 5. Key Observations
 
-### Observation 1: Singapore's Labour Force Participation Rate across all demographic profiles stayed resilient in spite of COVID-19 with the exception of first-jobbers
+### Observation 1: Singapore's Labour Force Participation Rate across all demographic profiles stayed resilient in spite of COVID-19, with the exception of first-jobbers
 
 ```{r}
 knitr::include_graphics("LPFR(Overall).png")
 ```
 
-Singapore's aggregated total LFPR was fairly stable across the 12-year time period with a range of 66.1%-70.5% even over the worst of the COVID-19 period in 2020 when Singapore went into lock-down. In fact, LFPR's slightly increased between 2020 and 2021 across most of the demographic profiles. The reason for this could be partly attributed to generous ["rescue packages"](https://www.channelnewsasia.com/singapore/mom-singapore-resident-employment-above-pre-covid-19-pandemic-levels-2349881) offered by the government to place more people in jobs during this period. 
+Singapore's aggregated total LFPR was fairly stable across the 12-year time period with a range of 66.1%-70.5% even over the worst of the COVID-19 period in 2020 when Singapore went into lock-down. In fact, LFPRs slightly increased between 2020 and 2021 across most of the demographic profiles. The reason for this could be partly attributed to generous ["rescue packages"](https://www.channelnewsasia.com/singapore/mom-singapore-resident-employment-above-pre-covid-19-pandemic-levels-2349881) offered by the government to place more people in jobs during this period. 
 
 The exception to this was for the 20-24 age group which saw the LFPR dipped 5% points in 2020 from 61% in 2021. This age group most likely comprised fresh graduates from tertiary institutions who were ["unable to find suitable permanent employment while looking for their first jobs. opportunities"](https://www.channelnewsasia.com/singapore/graduate-employment-survey-2020-covid-19-uni-grad-jobs-361801
 ) due to the uncertainties caused by the pandemic.  However, this recovered in 2021 when the LFPR bounced back from the low of 56.0% to 62.4%.
 
-### Observation 2: Over the past decade, Singapore residents in the older age groups saw the greatest increase in Labour Force Participation Rates with more working past official retirement age
+### Observation 2: Over the past decade, Singapore residents in the older age groups saw the greatest increase in Labour Force Participation Rates, with more working past official retirement age
 
 ```{r}
-knitr::include_graphics("LPFR(AgeSpread).png")
+knitr::include_graphics("LPFR(Age).png")
 ```
 
-The LFPR of older Singapore residents in the 65-69 age group increased a remarkable 20% points between 2010 and 2021, from 30.9% to 50.9%. This phenomenon is in line with policies led by the government to support older workers who wish to continue to be in employment. The current Retirement and Re-Employment Ages are 62 and 67 respectively where employers in Singapore must re-employ qualified employees who turn 62, up to age 67. This will be raised gradually to 65 and 70 years respectively by 2030 so this trend of increasing LPFR for older demographics is likely to continue.  
+Average LFPR showed the biggest spread over the years for the older age groups (55 years and above). Notably, the LFPR of older Singapore residents in the 65-69 age group increased a remarkable 20% points between 2010 and 2021, from 30.9% to 50.9%. This phenomenon is in line with policies led by the government to support older workers who wish to continue to be in employment. The current Retirement and Re-Employment Ages are 62 and 67 respectively where employers in Singapore must re-employ qualified employees who turn 62, up to age 67. This will be raised gradually to 65 and 70 years respectively by 2030 so this trend of increasing LPFR for older demographics is likely to continue.  
 
 ### Observation 3: The gender gap in our Labour Force Participation Rate is progressively narrowing, with the younger age groups showing indications of Female LFPR outpacing Males in recent years. 
 
@@ -172,7 +174,7 @@ knitr::include_graphics("LFPR(GenderAge).png")
 
 This downward trend holds true as well across all demographic profiles with the exception of the older age group of those aged 70 and above which saw a ~2% point increase in the gap. It would be interesting to investigate further the cause of this age group bucking the trend, especially given the developments mentioned in Observation 2.
 
-```{r}
+```{r, fig.align='center'}
 
 knitr::include_graphics("LPFR(20to29).png")
 
