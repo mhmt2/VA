@@ -214,6 +214,7 @@ This chart shows how the LFPR changes across the working lifespan of residents, 
 Create a new worksheet and set up the axes of Chart 2 by dragging the Age and LFPR(Total) fields in the left hand menu into the Columns and Row Shelves respectively. To view the data by age segments, drag the Year field into the Color box. In the Analytics tab on the top left hand corner of the sidebar, add an Average Line for each cell. Make the lines orange so it stands out and display the values under each line.
 
 Add the title and insights, matching the text colours with the graph labels for easier reference. The final chart should look like this.
+
 ```{r}
 knitr::include_graphics("images/DV1_24.png")
 ```
@@ -223,6 +224,7 @@ This chart investigates in greater detail how the LFPR of older workers changed 
 
 ## Step 24: 
 Create a duplicate of Chart 2. Filter and retain the age groups from 55 and above. Select Box Plot from the Analytics tab and add a plot for each cell.
+
 ```{r}
 knitr::include_graphics("images/DV1_25.png")
 ```
@@ -260,6 +262,7 @@ knitr::include_graphics("images/DV1_29.png")
 ```
 
 Your final Chart 4 should look like this:
+
 ```{r}
 knitr::include_graphics("images/DV1_30.png")
 ```
@@ -267,7 +270,7 @@ knitr::include_graphics("images/DV1_30.png")
 ## Chart 5 - Overall LFPR Gender Gap
 This chart show how the gap between the LPFR of Males and Females changed over time.
 
-## Step 25: 
+## Step 28: 
 Create a new worksheet and set up the axes of Chart 5 by dragging the Year(AggDiff) field to the Column Shelf and the LFPR(AggDiff) field to the Row Shelf. from the Colour box, change the Effects of the markers to show the points at each year.
 
 ```{r}
@@ -276,7 +279,7 @@ knitr::include_graphics("images/DV1_31.png")
 
 ```
 
-## Step 26: 
+## Step 29: 
 Add a reference line to show the starting year value (20.0%) and include annotations to explain how the gap was calculated. Add title and insights.
 
 ```{r}
@@ -292,15 +295,15 @@ knitr::include_graphics("images/DV1_33.png")
 ## Chart 6 - Age-segmented LFPR Gender Gap
 This chart show how the gap between the LPFR of Males and Females differed across the demographic profiles
 
-## Step 25: 
+## Step 30: 
 Create a new worksheet and set up the axes of Chart 6 by dragging the Year field to the Column Shelf and the Gender Diff field to the Row Shelf. Drag Age field into the Colour box
 
-## Step 26: 
+## Step 31: 
 Change the colours of the different age groups by highlighting the interesting lines only (20-24, 25-29, 70-74, 75 & Over) while greying out the rest. 
 
 Select the 2021 data points of these 4 highlighted lines and Show Label.
 
-## Step 27: 
+## Step 32: 
 Use matching colours in the insights text to reference the relevant age groups' chart lines.
 
 ```{r}
@@ -308,38 +311,102 @@ knitr::include_graphics("images/DV1_34.png")
 
 ```
 
-The final Chart 5 should look like this:
+The final Chart 6 should look like this:
 
 ```{r}
 knitr::include_graphics("images/DV1_35.png")
 
 ```
 
-## Chart 7 - Zoomed in  view of Gender Gap for Young Adults
-This chart shows a close up of how the LFPR gap changed for the 20-29 age groups over time.
+## Chart 7 - Zoomed in  view of Gender Gap for Young Adults (20-24)
+This chart shows a close up of how the LFPR gap changed for the 20-24 age groups over time.
 
-## Step 28: 
+## Step 33: 
 Create a new worksheet and set up the axes of Chart 7 by dragging the Year field to the Column Shelf and the 2 Gender Diff fields to the Row Shelf. Filter and retain only the 20-24 age group.
 
 Select Line for the first Mark and Area of the second Mark and Select Dual Axis to overlay the 2 plots. This allows the area chart to have a more prominent outline.
+
+Under Colour, choose Blue and lower the opacity of the shading to 20%
 
 ```{r}
 knitr::include_graphics("images/DV1_36.png")
 
 ```
 
-
-## Step 26: 
-Change the colours of the different age groups by highlighting the interesting lines only (20-24, 25-29, 70-74, 75 & Over) while greying out the rest. 
-
-Select the 2021 data points of these 4 highlighted lines and Show Label.
-
-## Step 27: 
-Use matching colours in the insights text to reference the relevant age groups' chart lines.
+## Step 34: 
+Repeat step 28 but this time make the area under the line pink. 
 
 ```{r}
-knitr::include_graphics("images/DV1_34.png")
+knitr::include_graphics("images/DV1_37.png")
 
 ```
 
-The final Chart 5 should look like this:
+## Step 35: 
+Combine the 2 plots by adjusting the upper plot y-axis to display from 0 to 8 and the lower plot y-axis to display from -8 to 0. This will make the areas above zero show blue, representing Males and the areas below zero show pink, representing Females. Add annotation and headers.
+
+```{r}
+knitr::include_graphics("images/DV1_38.png")
+
+```
+
+The final Chart 7 should look like this:
+
+```{r}
+knitr::include_graphics("images/DV1_39.png")
+
+```
+
+## Chart 8 - Zoomed in  view of Gender Gap for Young Adults (24-29)
+This chart shows a close up of how the LFPR gap changed for the 24-29 age groups over time.
+
+## Step 36: 
+Repeat Steps 28 to 30 but use the 24-29 Age filter instead. 
+
+Chart 8 should look similar, like this:
+
+```{r}
+knitr::include_graphics("images/DV1_40.png")
+
+```
+
+## Creating Dashboards
+
+This is to arrange the charts in a viewer-friendly layout that also tells the story.
+
+## Step 37:
+Create a new Dashboard worksheet on Tableau. Drag the first sheet *LFPR(Overall)* to the top of the canvas and drag next 2 to the lower half of the canvas. Remove the Legend from the Dashboard and include an umbrella header by dragging a blank Text box from the Objects menu in the left side bar to the desired location at the top.
+
+```{r}
+knitr::include_graphics("images/DV1_41.png")
+
+```
+
+## Step 38:
+Create another Dashboard worksheet on Tableau. Drag the remaining sheets to each of the 4 quarters of the canvas. For the last quarter on the bottom right, adjust the 2 charts so that they are the same size.
+
+Include an umbrella header by dragging a blank Text box from the Objects menu in the left side bar to the desired location at the top.
+
+```{r}
+knitr::include_graphics("images/DV1_42.png")
+
+```
+
+The final Dashboard should look like this:
+
+
+```{r}
+knitr::include_graphics("images/DV1_43.png")
+
+```
+
+# FINAL VISUALISATION
+
+The final visualisation should look like this:
+
+```{r}
+knitr::include_graphics("images/DV01_Dashboard01.png")
+
+knitr::include_graphics("images/DV01_Dashboard02.png")
+
+```
+
