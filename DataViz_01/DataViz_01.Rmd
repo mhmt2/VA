@@ -129,7 +129,7 @@ The proposed alternative visualisation has 2 intentions:
 
 The Dashboards can be viewed on Tableau Public by clicking on these links:
 
-+ [DataViz1: Singapore Labour Force Participation Rate, 2010-2021](https://public.tableau.com/app/profile/melissa.tan5282/viz/DataViz112/Dashboard1?publish=yes)
++ [DataViz1: Singapore Labour Force Participation Rate (2010-2021)](https://public.tableau.com/app/profile/melissa.tan5282/viz/DataViz112/Dashboard1?publish=yes)
 
 + [DataViz1: Labour Force Participation Rate in Singapore by Gender (2010-2021)](https://public.tableau.com/app/profile/melissa.tan5282/viz/DataViz122/Dashboard2?publish=yes)
 
