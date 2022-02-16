@@ -118,7 +118,19 @@ bscols( widths = c(7,5),
   DT::datatable(shared_choc, rownames = FALSE, options = list(pageLength = 5, scrollX=T, columnDefs = list(list(visible = FALSE, targets = c(1)))),colnames = c("Company Location", "Rating","Cocoa %"))
   )
 ```
-# 5. Challenge Encountered
+# 5. Observations
+
+- U.S.A. was the top company location with 1136 locations, followed far behind by Canada (177) and France (176).
+
+- However, the best chocolate rating was from Australia at 3.36, while the chocolate with the highest cocoa percentage was from the UK at 73.8%.
+
+- The only Asian country in the top 15 list was Japan, with 31 locations, an average rating of 3.13 and cocoa percentage of 71%.
+
+- The lowest chocolate rating came from Ecuador at 3.04, while the lowest cocoa percentages came from Venezuela and Denmark, tied at 70%.
+
+- Interestingly the locations with the highest chocolate ratings, i.e. Australia, Denmark, Switzerland, Canada, all had cocoa percentage that were relatively low (70-71.9%).
+
+# 6. Challenge Encountered
 One unexpected challenge encountered in this exercise was that the use of *crosstalk* would disrupt the default CSS framework of *distill*. This resulted in the usual text formatting and sizing going haywire.
 
 Upon further research, it was due to a Bootstrap HTML dependency attached to *filter_select()*, *filter_checkbox()*, and *bscols()*. This caused *crosstalk* to degrade the overall look when used in a non-Bootstrap CSS framework like *distill*. 
@@ -135,7 +147,7 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 
 ***
 
-# 6. References and Resources:
+# 7. References and Resources:
 1. [Hands-on Exercise 3: Programming Interactive Data Visualisation with R](https://isss608-ay2021-22t2.netlify.app/hands-on_ex/hands-on_ex03/hands-on_ex03#27)
 
 2. [Pimp my RMD: a few tips for R Markdown](https://holtzy.github.io/Pimp-my-rmd/)
