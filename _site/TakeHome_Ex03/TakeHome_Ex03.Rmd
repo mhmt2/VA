@@ -28,23 +28,18 @@ for(p in packages){
 ```
 
 # 1. The Task
-Create a data visualisation showing average rating and proportion of cocoa percent (% chocolate) greater than or equal to 70% by top 15 company location.
+Create a data visualisation showing average rating and proportion of cocoa percent (% chocolate) greater than or equal to 70% by top 15 company location. 
+
+Methods to visualise statistical uncertainty were employed.
 
 # 2. Data Preparation 
-To address the requirements of the task, *chocolate.csv* data set was used. The *DT* package was installed to display an interactive datatable to augment the graph. while the *crosstalk* package was installed to link multiple HTML widgets (e.g. a graph and a datatable) within RMarkdown.
+To address the requirements of the task, *chocolate.csv* data set was used. The *DT* package was installed to display an interactive datatable to augment the graph. The *crosstalk* package was installed to link multiple HTML widgets (e.g. a graph and a datatable) within RMarkdown.
 
 
-The data preparation plan was as follows:
+The data preparation was done as follows:
 
-  1. Select the 3 columns of interest, *company_location*, *rating* and *cocoa_percent* from the datatable.
+  1. Select the 3 columns of interest, *company_location*, *rating* and *cocoa_percent* from the original datatable. Convert the *cocoa_percent* column from character to numeric, removing the % symbol. Convert into a decimal for easier manipulation
 
-  2. Group data by company location, creating a new summary table of frequency count, average rating score and average cocoa percentage for each company location.
-
-  3. Filter out all company locations whose average cocoa percentage is less than 70%.
-
-  4. Slice out the top 15 locations by count.
-  
-  
 Code chunk:
 
 ```{r, echo=TRUE}
@@ -55,82 +50,187 @@ choc <- read_csv("data/chocolate.csv")
 choc$cocoa_percent<-gsub("%","",as.character(choc$cocoa_percent)) %>%
   as.numeric(choc$cocoa_percent)
 
-# Select only 3 relevent columns and create new datatable grouped by company locations. 
-# Keep only company locations with cococa% 70 and above
+# convert cocoa_percent into decimal for easier manipulation
+
+choc$cocoa_percent <- 0.01*choc$cocoa_percent
 
 choc_loc <- choc %>%
-  select(`company_location`,`rating`,`cocoa_percent`) %>%
-  group_by(`company_location`) %>%
-  summarise (n=n(), avgR=mean(`rating`), avgPct=mean(`cocoa_percent`)) %>%
-  filter(`avgPct`>= 70) %>%
-  ungroup()
+  select(`company_location`,`rating`,`cocoa_percent`)
 
-# Find top 15 company locations by number
-top15_n <- choc_loc %>% slice_max(`n`, n = 15)
-
-# Format data by stipulating no. of decimal places behind rating and cocoa percent values
-top15_n$avgR <- round(top15_n$avgR, digits = 2)
-top15_n$avgPct <- round(top15_n$avgPct, digits = 1)
 ```
 
-# 3. Visualisation Design
-
-A sketch of the proposed visualisation is shown below. 
+2. For **Average Rating**:
+  - Group data by company location, creating a new summary table of frequency count, average rating score and standard deviation 
   
-```{r, out.width="60%", out.height="60%", fig.align='center'}
+  - Create a new variable, standard error, calculated using the formula *standard error = standard deviation/sqrt(sample size - 1)*.
 
-knitr::include_graphics("viz_design.jpg")
-```
-The graph on the left will show the top 15 company locations in descending order. There will be an interactive tooltip which will display the Rating and Cocoa Percentage of the selected company location when the cursor is hovered over it.
-
-The interactive datatable will allow users to view the list company locations in order of ratings or cocoa percentage by clicking on the sort button at the top of each column. 
-
-As the two components will be linked, selecting any row in the table (e.g. the row with the highest rating or lowest cocoa percentage) will highlight the corresponding bar on the left to show the relative position of the company location. 
-
-# 4. Creating the Interactive Visualisation
-
-To create the graph described above, *ggplotly* was used with the following customisations:
-
-  - Company location was reordered 
-  - Text display on the tooltip was customised to show No. of Locations, Average Rating, and Average Cocoa Percentage
-  - Colour of bars were set to brown
-  - Default bars were flipped to be displayed horizontally
+  - Slice out the top 15 locations by frequency count.
   
-The data table was formatted to display only the Company Location, Rating and Cocoa Percentage and it was linked to the bar chart using the *crosstalk* method.
-
-The code chunk is as follows:
+  - Format the values by rounding off to 2 decimal places
+  
+Code chunk:
 
 ```{r, echo=TRUE}
+
+avgR <- choc_loc %>%
+  group_by(company_location) %>%
+  summarise(nR=n(),
+            meanR=mean(`rating`),
+            sd = sd(`rating`)) %>%
+  mutate(se=sd/sqrt(nR-1)) %>%
+  slice_max(`nR`, n=15)
+
+avgR$meanR <- round(avgR$meanR, digits = 2)
+avgR$sd <- round(avgR$sd, digits = 2)
+avgR$se <- round(avgR$se, digits = 2)
+
+```
+
+3. For **Cocoa Percentage**:
+  - Filter out all rows with cocoa percentages less than 70% 
+  - Group remaining data by company location, creating a new summary table of frequency count, average cocoa percentage
+  - Create a new variable, percentage standard error, calculated using the formula *percentage standard error = percentage x(1-percentage)/sqrt(sample size)*
+  - Slice out the top 15 locations by frequency count
+  - Create a new column displaying percentage as whole numbers, reordering the columns to place this after count
+  - Format the values by rounding off to 2 decimal places
+
+Code chunk:
+
+```{r, echo=TRUE}
+avgPct <- choc_loc %>%
+  filter(choc_loc$cocoa_percent >= 0.7) %>%
+  group_by(company_location) %>%
+  summarise(nP=n(), meanP = mean(`cocoa_percent`)) %>%
+  mutate(seP = sqrt(((`meanP`)*(1-`meanP`))/nP))%>%
+  slice_max(`nP`, n=15) %>%
+  mutate(meanP100 = meanP*100)
+
+avgPct <- avgPct[,c("company_location", "nP", "meanP100", "seP", "meanP")]
+
+avgPct$meanP100 <- round(avgPct$meanP100, digits = 1)
+avgPct$seP <- round(avgPct$seP, digits = 3) 
+```
+
+# 3. Creating the Interactive Visualisation
+
+To visualise the uncertainties, *ggplotly* was used with the following customisations:
+
+  - *geom_errorbar* was used to display the confidence interval of the mean value at 95% confidence
+  - *geom_point* was used to highlight the mean value for each company location
+  - Company location was reordered in descending order 
+  - Text display on the tooltip was customised to show No. of Locations, mean value, and the minimum and maximum values of the error bars 
+
+In addition, a **linked data table** was created using the *crosstalk* method to allow users to:
+  - View the full details of the frequency, mean, standard deviation and standard error
+  - Sort any of these columns by clicking on the button at the top of each column 
+
+As the two components are linked, selecting any row in the table (e.g. the row with the highest rating or lowest cocoa percentage) will highlight the corresponding element on the confidence interval graph
+
+The code chunk and visualisation for **Average Rating** are as follows:
+
+```{r, echo=TRUE}
+#linked charts of Ratings
 # Wrap data frame in SharedData
-shared_choc = SharedData$new(top15_n)
+
+shared_rating = SharedData$new(avgR)
 
 # Render graph
-bscols( widths = c(7,5),
-  ggplotly((ggplot(shared_choc, aes(x=reorder(company_location,n), y=n, text = paste("Company Location: ", `company_location`,"<br>No. of Locations: ", `n`,"<br>Average Rating: ", `avgR`, "<br>Average Cocoa Percentage: ",`avgPct`,"%"))) +
-  geom_bar(stat="identity", fill="saddlebrown") +
-  coord_flip()+
+bscols( widths = c(12,12),
+  ggplotly((ggplot(shared_rating) +
+  geom_errorbar(
+    aes(x=reorder(company_location,-nR,), 
+        ymin=meanR-1.98*se,
+        ymax=meanR+1.98*se),
+    width=0.2, 
+    colour="black", 
+    alpha=0.9, 
+    size=0.5) +
+  geom_point(aes
+           (x=company_location, 
+            y=meanR,
+             text = paste("Location:", `company_location`,"<br>Avg. Rating:",`meanR`,"<br>Max:", round((meanR+1.98*se), digits = 2), " Min:", round((meanR-1.98*se), digits = 2))), 
+           stat="identity", 
+           color="red",
+           size = 1.5,
+           alpha=1) +
   xlab("Company Location") +
-  ylab("No. of Locations") +
-  ggtitle("Chocolate Ratings by Top 15 Company Locations") +
-  theme_minimal() + 
-  theme(plot.title=element_text(size=9))), 
+  ylab("Average Ratings") +
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))+
+  ggtitle("95% Confidence Interval of Average Rating by Top 15 Locations")),
   tooltip = "text"),
-  DT::datatable(shared_choc, rownames = FALSE, options = list(pageLength = 5, scrollX=T, columnDefs = list(list(visible = FALSE, targets = c(1)))),colnames = c("Company Location", "Rating","Cocoa %"))
+  DT::datatable(shared_rating, rownames = FALSE, options = list(pageLength = 5, scrollX=T), colnames = c("No. of Locations", "Average Rating","Std Dev","Std Error"))
+  )
+```
+The code chunk and visualisation for **Cocoa Percentage** are as follows:
+
+```{r, echo=TRUE}
+#linked charts of Cocoa Percent
+# Wrap data frame in SharedData
+
+shared_pct = SharedData$new(avgPct)
+
+# Render graph
+bscols( widths = c(12,12),
+  ggplotly((ggplot(shared_pct) +
+  geom_errorbar(
+    aes(x=reorder(company_location,-nP,), 
+        ymin=meanP-1.98*seP,
+        ymax=meanP+1.98*seP),
+    width=0.2, 
+    colour="black", 
+    alpha=0.9, 
+    size=0.5) +
+  geom_point(aes
+           (x=company_location, 
+            y=meanP,
+            text = paste("Location:", `company_location`,"<br>Cocoa:",`meanP100`,"%<br>Max:", round((meanP+1.98*seP)*100, digits = 1), "% Min:", round((meanP-1.98*seP)*100, digits = 1),"%")), 
+           stat="identity", 
+           color="red",
+           size = 1.5,
+           alpha=1) +
+  xlab("Company Location") +
+  ylab("Cocoa Percentage (%)") +
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))+
+  ggtitle("95% Confidence Interval of Cocoa Percentage 70% and above 
+          by Top 15 Locations")),
+  tooltip="text"),
+  DT::datatable(shared_pct, rownames = FALSE, options = list(pageLength = 5,scrollX=T, columnDefs = list(list(visible=FALSE, targets=c(4)))),colnames = c("No. of Locations", "Avg Percentage","Pct Std Error","Pct"))
   )
 ```
 # 5. Observations
 
-- U.S.A. was the top company location with 1136 locations, followed far behind by Canada (177) and France (176).
+- U.S.A. was the **top company location** with 1136 locations for Average Rating and 974 for Cocoa Percentage, followed far behind by Canada (177, 163) and France (176, 130).
 
-- However, the best chocolate rating was from Australia at 3.36, while the chocolate with the highest cocoa percentage was from the UK at 73.8%.
+- The **highest chocolate rating** was from Australia at 3.36. Australia also clocked the **second lowest cocoa percentage** of 71.6% in the list. 
 
-- The only Asian country in the top 15 list was Japan, with 31 locations, an average rating of 3.13 and cocoa percentage of 71%.
+- Incidentally, Ecuador scored the **lowest average rating** at 3.04, with the **highest cocoa percentage** at 76.7%. 
 
-- The lowest chocolate rating came from Ecuador at 3.04, while the lowest cocoa percentages came from Venezuela and Denmark, tied at 70%.
+- The only Asian country in the top 15 list was Japan, with an average rating of 3.13 and cocoa percentage of 71.7%.
 
-- Interestingly the locations with the highest chocolate ratings, i.e. Australia, Denmark, Switzerland, Canada, all had cocoa percentage that were relatively low (70-71.9%).
+- The lowest cocoa percentage in the top 15 came from Denmark, at 71.1%.
 
-# 6. Challenge Encountered
+## A note on error bars
+Error bars communicate the following information about the data:
+
+- **How spread the data are around the mean value for each country**. In the Average Rating chart, the small error bar for the USA indicated a low spread, i.e. the ratings across the different locations in the US are clustered around the mean. This contrasts with countries such as Belgium, whose larger error bar indicates that the rating values vary more from the mean.
+
+- **How reliable the mean value is as a representative number for the data set**.  In other words, how accurately the mean value represents the data (small error bar = more reliable, larger error bar = less reliable).  It's important to note that just because you have a larger error bar, it does not indicate your data is invalid.  Biological measurements are notoriously variable.
+
+- **The likelihood of there being a significant difference** between between different countries' data. A "significant difference" means that the results that are seen are most likely not due to chance or sampling error.  In any experiment or observation that involves sampling from a population, there is always the possibility that an observed effect would have occurred due to sampling error alone.  But if result is "significant"  then the investigator may conclude that the observed effect actually reflects the characteristics of the population rather than just sampling error or chance. To this end, the standard deviation error bars on a graph can be used to get a sense for whether or not a difference is significant.  Look at overlap between the error bars in the figure below:
+
+```{r, out.width="50%", out.height="50%", fig.align='center'}
+
+knitr::include_graphics("errorbars.png")
+```
+
+  - When standard deviation error bars do not overlap, as shown in the case between USA and Canada, it is a clue that the difference may be significant, but you cannot be sure.  You must actually perform a statistical test to draw a conclusion.
+  
+  - When standard deviation errors bars overlap alot, like Canada and France, it is a clue that the difference may not be statistically significant.  Similarly, a statistical test must be performed to draw a conclusion. 
+
+
+# 6. Challenges Encountered
 One unexpected challenge encountered in this exercise was that the use of *crosstalk* would disrupt the default CSS framework of *distill*. This resulted in the usual text formatting and sizing going haywire.
 
 Upon further research, it was due to a Bootstrap HTML dependency attached to *filter_select()*, *filter_checkbox()*, and *bscols()*. This caused *crosstalk* to degrade the overall look when used in a non-Bootstrap CSS framework like *distill*. 
@@ -159,3 +259,8 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 5. [Plotly in R: How to make ggplot2 charts interactive with ggplotly](https://www.musgraveanalytics.com/blog/2018/8/24/how-to-make-ggplot2-charts-interactive-with-plotly)
                                                                             
 6. [RStudio/crosstalk](https://github.com/rstudio/crosstalk/blob/main/NEWS.md#crosstalk-1119000)
+
+7. [Biology for Life: Interpreting Error Bars](https://www.biologyforlife.com/interpreting-error-bars.html)
+
+***
+
