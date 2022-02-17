@@ -248,7 +248,7 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 ***
 
 # 7. References and Resources:
-1. [Hands-on Exercise 3: Programming Interactive Data Visualisation with R](https://isss608-ay2021-22t2.netlify.app/hands-on_ex/hands-on_ex03/hands-on_ex03#27)
+1. [Hands-on Exercise 4: Visual Analytics with R](https://isss608-ay2021-22t2.netlify.app/hands-on_ex/hands-on_ex04/hands-on_ex04#16)
 
 2. [Pimp my RMD: a few tips for R Markdown](https://holtzy.github.io/Pimp-my-rmd/)
 
