@@ -199,7 +199,7 @@ bscols( widths = c(12,12),
   DT::datatable(shared_pct, rownames = FALSE, options = list(pageLength = 5,scrollX=T, columnDefs = list(list(visible=FALSE, targets=c(4)))),colnames = c("No. of Locations", "Avg Percentage","Pct Std Error","Pct"))
   )
 ```
-# 5. Observations
+# 5. Observations and Analysis
 
 - U.S.A. was the **top company location** with 1136 locations for Average Rating and 974 for Cocoa Percentage, followed far behind by Canada (177, 163) and France (176, 130).
 
@@ -211,8 +211,18 @@ bscols( widths = c(12,12),
 
 - The lowest cocoa percentage in the top 15 came from Denmark, at 71.1%.
 
-## A note on error bars
-Error bars communicate the following information about the data:
+## A Note on Confidence Intervals 
+
+- For both the Average Rating and Cocoa Percentage charts, the USA had the narrowest confidence intervals at 95%. This means that there is a **95% probability that the Average Rating of chocolate in the USA locations fall between 3.17 and 3.21 and the Cocoa Percentage falls between 69.9%-75.4%**.
+
+- Visually, it is obvious that the **confidence intervals increase for countries with smaller number of locations (smaller sample sizes)**. For example, for Venezuela, which has 31 and 25 locations in the data set for Average Rating and Cocoa Percentage respectively, the 95% confidence intervals cover a **much wider range** at 2.95-3.27 and 54.8%-90.1%.
+
+
+- This is because **standard error (and the width of the confidence interval) increases** when **sample size decreases**. When sample sizes are larger, they are closer to the true size of the population, and the sample means will tend to cluster increasingly around the true population mean i.e. the confidence interval will narrow given the same confidence level.
+
+- Often a sample size is considered “large enough” if it's greater than or equal to 30, but this number can vary a bit based on the underlying shape of the population distribution.
+
+### In addition, error bars communicate the following information about the data:
 
 - **How spread the data are around the mean value for each country**. In the Average Rating chart, the small error bar for the USA indicated a low spread, i.e. the ratings across the different locations in the US are clustered around the mean. This contrasts with countries such as Belgium, whose larger error bar indicates that the rating values vary more from the mean.
 
