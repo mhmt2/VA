@@ -89,7 +89,7 @@ avgR$se <- round(avgR$se, digits = 2)
 3. For **Cocoa Percentage**:
   - Filter out all rows with cocoa percentages less than 70% 
   - Group remaining data by company location, creating a new summary table of frequency count, average cocoa percentage
-  - Create a new variable, percentage standard error, calculated using the formula *percentage standard error = percentage x(1-percentage)/sqrt(sample size)*
+  - Create a new variable, percentage standard error, calculated using the formula *percentage standard error = sqrt((percentage x(1-percentage))/(sample size))*
   - Slice out the top 15 locations by frequency count
   - Create a new column displaying percentage as whole numbers, reordering the columns to place this after count
   - Format the values by rounding off to 2 decimal places
