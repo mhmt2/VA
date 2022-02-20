@@ -237,7 +237,7 @@ cor_results
 
 The correlation was further visualised using the *ggscatterstats* function from the *ggstatsplot* package and similar results were obtained.
 
-```{r}
+```{r, echo=TRUE}
 
 ggscatterstats(data = comb,
   x = meanR,
