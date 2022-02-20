@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ```{r}
-packages = c('tidyverse', 'readxl', 'crosstalk', 'knitr','ggiraph','plotly','patchwork','gganimate','gapminder','DT','gifski',"gridExtra")
+packages = c('tidyverse', 'readxl', 'crosstalk','ggstatsplot','correlation', 'knitr','ggiraph','plotly','patchwork','gganimate','gapminder','DT','gifski',"gridExtra")
 
 for(p in packages){
   if(!require(p, character.only = T)){
@@ -117,7 +117,7 @@ To visualise the uncertainties, *ggplotly* was used with the following customisa
 
   - *geom_errorbar* was used to display the confidence interval of the mean value at 95% confidence
   - *geom_point* was used to highlight the mean value for each company location
-  - Company location was reordered in descending order 
+  - Company location was *reordered* in descending order of average rating or percentage cocoa
   - Text display on the tooltip was customised to show No. of Locations, mean value, and the minimum and maximum values of the error bars 
 
 In addition, a **linked data table** was created using the *crosstalk* method to allow users to:
@@ -138,7 +138,7 @@ shared_rating = SharedData$new(avgR)
 bscols( widths = c(12,12),
   ggplotly((ggplot(shared_rating) +
   geom_errorbar(
-    aes(x=reorder(company_location,-nR,), 
+    aes(x=reorder(company_location,-meanR,), 
         ymin=meanR-1.96*se,
         ymax=meanR+1.96*se),
     width=0.2, 
@@ -148,7 +148,7 @@ bscols( widths = c(12,12),
   geom_point(aes
            (x=company_location, 
             y=meanR,
-             text = paste("Location:", `company_location`,"<br>Avg. Rating:",`meanR`,"<br>95% CI:[", round((meanR-1.96*se), digits = 2), ",", round((meanR+1.96*se), digits = 2),"]")), 
+             text = paste("Location:", `company_location`,"<br>N:", `nR`,"<br>Avg. Rating:",`meanR`,"<br>95% CI:[", round((meanR-1.96*se), digits = 2), ",", round((meanR+1.96*se), digits = 2),"]")), 
            stat="identity", 
            color="red",
            size = 1.5,
@@ -174,7 +174,7 @@ shared_pct = SharedData$new(avgPct)
 bscols( widths = c(12,12),
   ggplotly((ggplot(shared_pct) +
   geom_errorbar(
-    aes(x=reorder(company_location,-nP,), 
+    aes(x=reorder(company_location,-meanP,), 
         ymin=meanP-1.96*seP,
         ymax=meanP+1.96*seP),
     width=0.2, 
@@ -184,7 +184,7 @@ bscols( widths = c(12,12),
   geom_point(aes
            (x=company_location, 
             y=meanP,
-            text = paste("Location:", `company_location`,"<br>Cocoa:",`meanP100`,"%<br>95% CI: [", round((meanP-1.96*seP)*100, digits = 1), "%, ", round((meanP+1.96*seP)*100, digits = 1),"%]")), 
+            text = paste("Location:", `company_location`,"<br>N:", `nP`,"<br>Cocoa:",`meanP100`,"%<br>95% CI: [", round((meanP-1.96*seP)*100, digits = 1), "%, ", round((meanP+1.96*seP)*100, digits = 1),"%]")), 
            stat="identity", 
            color="red",
            size = 1.5,
@@ -201,19 +201,59 @@ bscols( widths = c(12,12),
 ```
 # 5. Observations and Analysis
 
-- U.S.A. was the **top company location** with 1136 locations for Average Rating and 974 for Cocoa Percentage, followed far behind by Canada (177, 163) and France (176, 130).
+  1. U.S.A. was the **top company location** with 1136 locations for Average Rating and 974 for Cocoa Percentage, followed far behind by Canada (177, 163) and France (176, 130).
 
-- The **highest chocolate rating** was from Australia at 3.36. Australia also clocked the **second lowest cocoa percentage** of 71.6% in the list. 
+  2. The **highest chocolate rating** was from Australia at 3.36. Australia also clocked the **second lowest cocoa percentage** of 71.6% in the list. 
 
-- Incidentally, Ecuador scored the **lowest average rating** at 3.04, with the **highest cocoa percentage** at 76.7%. 
+  3. Ecuador scored the **lowest average rating** at 3.04, with the **highest cocoa percentage** at 76.7%, 
 
-- The only Asian country in the top 15 list was Japan, with an average rating of 3.13 and cocoa percentage of 71.7%.
+  4. The lowest cocoa percentage in the top 15 came from Denmark, at 71.1%. Denmark also had the second highest average rating.
+  
+  5. The UK had the third highest cocoa percentage at 74.6% and the second lowest average rating at 3.07.
+  
+  6. The only Asian country in the top 15 list was Japan, with an average rating of 3.13 and cocoa percentage of 71.7%.
+  
+  7. Observations No. 2 to 5 seem to suggest that there may be consumer preferences linking higher ratings with lower cocoa content which warranted further investigation of whether there was any **correlation** between the two variables. 
 
-- The lowest cocoa percentage in the top 15 came from Denmark, at 71.1%.
+# 6. Correlation Analysis
+
+A new datatable made by joining the mean ratings and mean cocoa percentage columns by company_locations. Unmatched rows were not included.
+
+Using the *correlation* package, the r value of correlation was calculated to be **-0.54, with a p-value of 0.048** (lower than the critical value of 0.05 at 95% confidence).
+
+As strong correlations are indicated by r values closer to 1, while weak correlations are indicated by r values closer to 0, the r value of -0.54 in this case indicates a statistically significant **low negative correlation** between the chocolate's rating and cocoa percentage. 
+
+```{r, echo=TRUE}
+
+#scatterplot of correlation
+
+comb <- inner_join(avgR, avgPct, by = "company_location") 
+
+comb <- select(comb, c(`company_location`,`meanR`, `meanP`))
+
+cor_results <- correlation(comb)
+cor_results
+```
+
+The correlation was further visualised using the *ggscatterstats* function from the *ggstatsplot* package and similar results were obtained.
+
+```{r}
+
+ggscatterstats(data = comb,
+  x = meanR,
+  y = meanP,
+  marginal = FALSE,
+  xlab = "Average Rating", 
+  ylab = "Mean Cocoa Percentage", 
+  )
+
+```
 
 ## A Note on Confidence Intervals 
 
 - For both the Average Rating and Cocoa Percentage charts, the USA had the narrowest confidence intervals at 95%. This means that there is a **95% probability that the Average Rating of chocolate in the USA locations fall between 3.17 and 3.21 and the Cocoa Percentage falls between 69.9%-75.4%**.
+
+- Although the range of cocoa percentages across at 15 locations was relatively narrow, between 71.1% for Denmark and 76.7% for Ecuador, it can be observed from the chart that the width of the confidence intervals for the different locations were much more varied.
 
 - Visually, it is obvious that the **confidence intervals increase for countries with smaller number of locations (smaller sample sizes)**. For example, for Venezuela, which has 31 and 25 locations in the data set for Average Rating and Cocoa Percentage respectively, the 95% confidence intervals cover a **much wider range** at 2.95-3.27 and 55%-89.9%.
 
