@@ -121,6 +121,7 @@ To visualise the uncertainties, *ggplotly* was used with the following customisa
   - Text display on the tooltip was customised to show No. of Locations, mean value, and the minimum and maximum values of the error bars 
 
 In addition, a **linked data table** was created using the *crosstalk* method to allow users to:
+
   - View the full details of the frequency, mean, standard deviation and standard error
   - Sort any of these columns by clicking on the button at the top of each column 
 
@@ -280,7 +281,7 @@ knitr::include_graphics("errorbars.png")
   - When standard deviation errors bars overlap alot, like Canada and France, it is a clue that the difference may not be statistically significant.  Similarly, a statistical test must be performed to draw a conclusion. 
 
 
-# 6. Challenges Encountered
+# 7. Challenges Encountered
 One unexpected challenge encountered in this exercise was that the use of *crosstalk* would disrupt the default CSS framework of *distill*. This resulted in the usual text formatting and sizing going haywire.
 
 Upon further research, it was due to a Bootstrap HTML dependency attached to *filter_select()*, *filter_checkbox()*, and *bscols()*. This caused *crosstalk* to degrade the overall look when used in a non-Bootstrap CSS framework like *distill*. 
@@ -297,7 +298,7 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 
 ***
 
-# 7. References and Resources:
+# 8. References and Resources:
 1. [Hands-on Exercise 4: Visual Analytics with R](https://isss608-ay2021-22t2.netlify.app/hands-on_ex/hands-on_ex04/hands-on_ex04#16)
 
 2. [Pimp my RMD: a few tips for R Markdown](https://holtzy.github.io/Pimp-my-rmd/)
