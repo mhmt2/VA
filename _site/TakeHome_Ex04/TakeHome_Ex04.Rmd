@@ -1,0 +1,249 @@
+---
+title: "ISSS608 AY2021-22(T2): Take-Home Exercise 4"
+description: |
+  Reveal the impact of COVID-19 on the stock prices of top 40 companies in Singapore by market capitalisation
+author:
+  - name: Melissa Tan
+    email: melissa.tan.2021@mitb.smu.edu.sg
+    affiliation: SMU MITB Analytics Track
+    affiliation_url: https://scis.smu.edu.sg/master-it-business/analytics-track/curriculum?gclid=CjwKCAiA3L6PBhBvEiwAINlJ9EJwYxpaZv-zPxR0UMntDh37TrlWU7jwXP9Dcu9jvWvN8uEJsOWzTRoCqrQQAvD_BwE
+    
+date: "`r Sys.Date()`"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+
+packages = c('Quandl','rvest','quantmod','tidyquant','rmarkdown','tidyr','tidyverse','readxl',
+             'data.table','XML','xml2','httr','rmarkdown','knitr','TTR','scales','viridis',
+             'ggthemes','ggHoriPlot')
+for (p in packages) {
+  if(!require(p,character.only = T)){
+    install.packages(p)
+  }
+  library(p,character.only = T)
+}
+```
+```{r}
+company <- read_csv("data/companySG.csv")
+
+Top40 <- company %>% slice_max(`marketcap`, n=40) %>% select(Symbol)
+
+Top40
+
+#list40=as.list(Top40)
+
+```
+```{r}
+Stock40 <- Top40 %>%
+    tq_get(get = "stock.prices", from = "2020-01-01", to = "2021-12-31")
+
+Stock40$Diff <- Stock40$adjusted - Stock40$open
+
+Stock40$RateChange <- ((Stock40$adjusted/shift(Stock40$adjusted)) - 1 )*100
+```
+
+```{r}
+Stock40_weekly <- Top40 %>%
+  tq_get(get = "stock.prices", from = "2020-01-01", to = "2021-12-31") %>%
+           tq_transmute(select = adjusted , 
+               mutate_fun = periodReturn, 
+               period  = "weekly")
+```
+
+```{r}
+Stock40_weekly <- Top40 %>%
+  tq_get(get = "stock.prices", from = "2020-01-01", to = "2021-12-31") %>%
+  group_by(Symbol) %>%
+  tq_transmute(select     = NULL, 
+               mutate_fun = to.period, 
+               period  = "weeks")
+
+Stock40_weekly$AdjustedRateChange <- ((Stock40_weekly$adjusted/shift(Stock40_weekly$adjusted)) - 1 )*100
+
+Stock40_weekly$CloseRateChange <- ((Stock40_weekly$close/shift(Stock40_weekly$close)) - 1 )*100
+
+Stock40_weekly$OpenRateChange <- ((Stock40_weekly$open/shift(Stock40_weekly$open)) - 1 )*100
+```
+
+
+```{r}
+a <- Stock40 %>% 
+  ggplot() +
+  geom_horizon(aes(x = date, y=close), origin = "min",horizonscale = 6)+
+  facet_grid(Symbol~.)+
+  #facet_wrap(~Symbol, ncol = 1, scales = 'free_y') +
+  theme_few() +
+  scale_fill_hcl(palette = 'RdBu')+
+  theme(
+    panel.spacing.y=unit(0, "lines"),
+    strip.text.y = element_text(size = 7, angle = 0, hjust = 0),
+    legend.position = 'none',
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.border = element_blank()
+    ) +
+  scale_x_date(expand=c(0,0), date_breaks = "1 month", date_labels = "%b") +
+  ggtitle('Stock prices for Top 40 Companies by Market Cap from 1 Jan 2020 to 31 Dec 2021') +
+  xlab('Date')
+
+a
+```
+
+```{r}
+
+a <- Stock40_weekly %>% 
+  ggplot() +
+  geom_horizon(aes(x = date, y=open), origin = "mean",horizonscale = 6)+
+  facet_grid(Symbol~.)+
+  #facet_wrap(~Symbol, ncol = 1, scales = 'free_y') +
+  theme_few() +
+  scale_fill_hcl(palette = 'RdBu')+
+  theme(
+    panel.spacing.y=unit(0, "lines"),
+    strip.text.y = element_text(size = 7, angle = 0, hjust = 0),
+    legend.position = 'none',
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.border = element_blank()
+    ) +
+  scale_x_date(expand=c(0,0), date_breaks = "1 month", date_labels = "%b") +
+  ggtitle('Opening Stock prices for Top 40 Companies by Market Cap from 1 Jan 2020 to 31 Dec 2021') +
+  xlab('Date')
+
+a
+```
+
+```{r}
+
+a <- Stock40_weekly %>% 
+  ggplot() +
+  geom_horizon(aes(x = date, y=close), origin = "mean",horizonscale =6)+
+  facet_grid(Symbol~.)+
+  theme_few() +
+  scale_fill_hcl(palette = 'RdBu')+
+  theme(
+    panel.spacing.y=unit(0, "lines"),
+    strip.text.y = element_text(size = 7, angle = 0, hjust = 0),
+    legend.position = 'none',
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.border = element_blank()
+    ) +
+  scale_x_date(expand=c(0,0), date_breaks = "1 month", date_labels = "%b") +
+  ggtitle('Closing Stock prices for Top 40 Companies by Market Cap from 1 Jan 2020 to 31 Dec 2021') +
+  xlab('Date')
+
+a
+```
+```{r}
+
+a <- Stock40_weekly %>% 
+  ggplot() +
+  geom_horizon(aes(x = date, y=adjusted), origin = "mean",horizonscale = 6)+
+  facet_grid(Symbol~.)+
+  #facet_wrap(~Symbol, ncol = 1, scales = 'free_y') +
+  theme_few() +
+  scale_fill_hcl(palette = 'RdBu')+
+  theme(
+    panel.spacing.y=unit(0, "lines"),
+    strip.text.y = element_text(size = 7, angle = 0, hjust = 0),
+    legend.position = 'none',
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.border = element_blank()
+    ) +
+  scale_x_date(expand=c(0,0), date_breaks = "1 month", date_labels = "%b") +
+  ggtitle('Adjusted Opening Stock prices for Top 40 Companies by Market Cap from 1 Jan 2020 to 31 Dec 2021') +
+  xlab('Date')
+
+a
+```
+
+
+
+
+```{r}
+
+a <- Stock40_weekly %>% 
+  ggplot() +
+  geom_horizon(aes(x = date, y=AdjustedRateChange), origin = 0)+  
+  facet_grid(Symbol~.)+
+  #facet_wrap(~Symbol, ncol = 1, scales = 'free_y') +
+  theme_few() +
+  scale_fill_hcl(palette = 'RdBu')+
+  theme(
+    panel.spacing.y=unit(0, "lines"),
+    strip.text.y = element_text(size = 7, angle = 0, hjust = 0),
+    legend.position = 'none',
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.border = element_blank()
+    ) +
+  scale_x_date(expand=c(0,0), date_breaks = "1 month", date_labels = "%b") +
+  ggtitle('Adjusted Price Rate of Change for Top 40 Companies by Market Cap from 1 Jan 2020 to 31 Dec 2021') +
+  xlab('Date')
+
+a
+```
+
+
+```{r}
+
+a <- Stock40_weekly %>% 
+  ggplot() +
+  geom_horizon(aes(x = date, y=OpenRateChange), origin = 0)+  
+  facet_grid(Symbol~.)+
+  #facet_wrap(~Symbol, ncol = 1, scales = 'free_y') +
+  theme_few() +
+  scale_fill_hcl(palette = 'RdBu')+
+  theme(
+    panel.spacing.y=unit(0, "lines"),
+    strip.text.y = element_text(size = 7, angle = 0, hjust = 0),
+    legend.position = 'none',
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.border = element_blank()
+    ) +
+  scale_x_date(expand=c(0,0), date_breaks = "1 month", date_labels = "%b") +
+  ggtitle('Opening Price Rate of Change for Top 40 Companies by Market Cap from 1 Jan 2020 to 31 Dec 2021') +
+  xlab('Date')
+
+a
+```
+
+
+```{r}
+
+a <- Stock40_weekly %>% 
+  ggplot() +
+  geom_horizon(aes(x = date, y=CloseRateChange), origin = 0)+  
+  facet_grid(Symbol~.)+
+  #facet_wrap(~Symbol, ncol = 1, scales = 'free_y') +
+  theme_few() +
+  scale_fill_hcl(palette = 'RdBu')+
+  theme(
+    panel.spacing.y=unit(0, "lines"),
+    strip.text.y = element_text(size = 7, angle = 0, hjust = 0),
+    legend.position = 'none',
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.border = element_blank()
+    ) +
+  scale_x_date(expand=c(0,0), date_breaks = "1 month", date_labels = "%b") +
+  ggtitle('Closing Price Rate of Change for Top 40 Companies by Market Cap from 1 Jan 2020 to 31 Dec 2021') +
+  xlab('Date')
+
+a
+```
