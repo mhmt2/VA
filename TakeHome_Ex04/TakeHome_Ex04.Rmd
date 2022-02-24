@@ -94,7 +94,7 @@ Stock40_weekly$AdjustedRateChange <- ((Stock40_weekly$adjusted/shift(Stock40_wee
 
 ```
 
-#3. Data Visualiastion 
+# 3. Data Visualiastion 
 
 ## Horizon graph of Adjusted Stock Price 
 
@@ -178,7 +178,7 @@ Before commenting on the visualisations, it is useful to understand the context 
 - Throughout 2021, the vaccination programme intensified as part of the strategy towards reopening, with the milestone of 80% national population vaccinated reported on 26 August 2021.  
 
 
-## Adjusted Price Horizon Graph
+## Analysis of Adjusted Price Horizon Graph
 
 1. From the adjusted price horizon graph, sections of extremely high or low stock prices can be easily spotted because they stand out as darker patches of blue or red. 
 
@@ -188,7 +188,7 @@ Before commenting on the visualisations, it is useful to understand the context 
 
 4. Other companies like GRAB, TRIT started trading only at the end of 2020, with relatively good early performance. 
   
-## ROC Horizon Graph
+## Analysis of ROC Horizon Graph
 
 When viewed together with the Adjusted Price horizon graph, the ROC horizon graph shows a more interesting picture. 
 
@@ -200,7 +200,7 @@ When viewed together with the Adjusted Price horizon graph, the ROC horizon grap
 
 4. These observations suggest that there is some value in **using an ROC chart to complement the Stock Prices chart, and serve as an early indicator of upcoming trends** for investors who may wish to buy-in ahead of the mainstream.
 
-## Horizon graph of Adjusted Prices relative to first day of time period. 
+## Analysis of Horizon graph of Adjusted Prices relative to first day of time period 
 
 To get an even clearer picture of how these top 40 companies were impacted by COVID-19, if at all, the origin value was changed from using median, to the stock prices **on the very first trading day of the time period** i.e. 3 January 2020. 
 
