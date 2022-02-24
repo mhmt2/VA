@@ -250,7 +250,7 @@ As can be seen from the horizon graph above, which was reordered in ascending or
 ***
 
 # 8. References and Resources:
-1. [Hands-on Exercise 4: Visual Analytics with R](https://isss608-ay2021-22t2.netlify.app/hands-on_ex/hands-on_ex04/hands-on_ex04#16)
+1. [It’s About Time: Visualising and Analysing Time-Oriented Data](https://isss608-ay2021-22t2.netlify.app/lesson/lesson06/lesson06-it_is_about_time#53)
 
 2. [Using R to Scrape Financial Dataset](https://giniceseah.netlify.app/posts/2021-06-18-scraping-of-financial-dataset/#tidyquant-package)
 
