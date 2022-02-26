@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 packages = c('Quandl','rvest','quantmod','tidyquant','rmarkdown','tidyr','tidyverse','readxl',
              'data.table','XML','xml2','httr','rmarkdown','knitr','TTR','scales','viridis',
-             'ggthemes','ggHoriPlot','writexl')
+             'ggthemes','ggHoriPlot','writexl', 'plotly')
 for (p in packages) {
   if(!require(p,character.only = T)){
     install.packages(p)
@@ -106,6 +106,8 @@ For this visualisation, the origin line was set to "median" to reduce the effect
 
 The stocks are arranged by row, and time is displayed horizontally, from left to right. Rises and falls in stock prices relative to the median were encoded as 2-D position—lines that move up and down as they proceed from left to right. The intensity of the colours indicate the relative distance from the origin. The darker the hue, the further away, the lighter the hue, the closer to the origin. 
 
+Reference lines were added to mark out key COVID-19-related milestones in Singapore, to help users put the changes in stock performances into context. 
+
 ```{r, echo=TRUE}
 
 a <- Stock40_weekly %>% 
@@ -114,6 +116,10 @@ a <- Stock40_weekly %>%
   facet_grid(Symbol~.)+
   theme_few() +
   scale_fill_hcl(palette = 'RdBu')+
+  geom_vline(xintercept = as.Date("2020-02-07"), linetype = "dotted", size = 0.5) +
+  geom_vline(xintercept = as.Date("2020-06-02"), linetype = "dotted", size = 0.5) +
+  geom_vline(xintercept = as.Date("2020-12-14"), linetype = "dotted", size = 0.5) +
+  geom_vline(xintercept = as.Date("2020-04-07"), linetype = "dotted", size = 0.5) +
   theme(
     panel.spacing.y=unit(0, "lines"),
     strip.text.y = element_text(size = 5, angle = 0, hjust = 0),
@@ -143,6 +149,10 @@ a <- Stock40_weekly %>%
   facet_grid(Symbol~.)+
   theme_few() +
   scale_fill_hcl(palette = 'RdBu')+
+  geom_vline(xintercept = as.Date("2020-02-07"), linetype = "dotted", size = 0.5) +
+  geom_vline(xintercept = as.Date("2020-06-02"), linetype = "dotted", size = 0.5) +
+  geom_vline(xintercept = as.Date("2020-12-14"), linetype = "dotted", size = 0.5) +
+  geom_vline(xintercept = as.Date("2020-04-07"), linetype = "dotted", size = 0.5) +
   theme(
     panel.spacing.y=unit(0, "lines"),
     strip.text.y = element_text(size = 5, angle = 0, hjust = 0),
@@ -169,16 +179,16 @@ Before commenting on the visualisations, it is useful to understand the context 
 
 - On 7 February 2020, the Singapore Government announced the DORSCON Orange public health status, sending citizens and businesses into a state of anxiety and uncertainty about the impact of the imminent COVID-19 outbreak. 
 
-- On March 21 2020, Singapore reported its first COVID-19 deaths. 
+- On 21 March 2020, Singapore reported its first COVID-19 deaths. 
 
 - From 7 April to 2 June 2020, Singapore went into an effective lock-down with everyone confined to their homes except for essential activities during the Circuit Breaker (CB). 
 
-- In December 2020, the Multi-Ministerial Task Force announced the strategy for national vaccination and the arrival of the first batch of vaccines to Singapore. 
+- On 14 December 2020, the Multi-Ministerial Task Force announced the strategy for national vaccination and the arrival of the first batch of vaccines to Singapore. 
 
 - Throughout 2021, the vaccination programme intensified as part of the strategy towards reopening, with the milestone of 80% national population vaccinated reported on 26 August 2021.  
 
 
-## Analysis of Adjusted Price Horizon Graph
+## Impact of COVID-19 on Stock Prices
 
 1. From the adjusted price horizon graph, sections of extremely high or low stock prices can be easily spotted because they stand out as darker patches of blue or red. 
 
@@ -188,7 +198,7 @@ Before commenting on the visualisations, it is useful to understand the context 
 
 4. Other companies like GRAB, TRIT started trading only at the end of 2020, with relatively good early performance. 
   
-## Analysis of ROC Horizon Graph
+## Early Indicators of Change in Stock Price Trends
 
 When viewed together with the Adjusted Price horizon graph, the ROC horizon graph shows a more interesting picture. 
 
@@ -200,7 +210,7 @@ When viewed together with the Adjusted Price horizon graph, the ROC horizon grap
 
 4. These observations suggest that there is some value in **using an ROC chart to complement the Stock Prices chart, and serve as an early indicator of upcoming trends** for investors who may wish to buy-in ahead of the mainstream.
 
-## Analysis of Horizon graph of Adjusted Prices relative to first day of time period 
+## Changes in Stock Prices vis-a-vis Pre-COVID-19: Horizon graph of Prices Relative to First Day of Time Period 
 
 To get an even clearer picture of how these top 40 companies were impacted by COVID-19, if at all, the origin value was changed from using median, to the stock prices **on the very first trading day of the time period** i.e. 3 January 2020. 
 
@@ -221,6 +231,10 @@ a <- Stock40_ori %>%
   facet_grid(Symbol~.)+
   theme_few() +
   scale_fill_hcl(palette = 'RdBu')+
+  geom_vline(xintercept = as.Date("2020-02-07"), linetype = "dotted", size = 0.5) +
+  geom_vline(xintercept = as.Date("2020-06-02"), linetype = "dotted", size = 0.5) +
+  geom_vline(xintercept = as.Date("2020-12-14"), linetype = "dotted", size = 0.5) +
+  geom_vline(xintercept = as.Date("2020-04-07"), linetype = "dotted", size = 0.5) +
   theme(
     panel.spacing.y=unit(0, "lines"),
     strip.text.y = element_text(size = 5, angle = 0, hjust = 0),
@@ -246,6 +260,21 @@ As can be seen from the horizon graph above, which was reordered in ascending or
 2. Some companies were negatively affected by the events in 2020 but bounced back to higher than pre-COVID levels in 2021. These include DBS (DBSDF), UOB (U11.SI), Community Healthcare Trust (HCTPF), ST Engineering (SJX.F)and can be observed by how their horizon charts transitioned from red/deep red in the first half of the time period, into blues/deep blues in the second half.
 
 3. There was also a group of companies that were not only spared the adverse impact of COVID-19, but who recovered very quickly following the circuit breaker, to **outperform pre-COVID levels** once Singapore reopened from June 2020 onwards. These included the technology and logistics companies whose services became **indispensable for Singaporeans to cope with the acceleration of digital adoption during the pandemic**. These included companies such as Sea (SE), which owns online e-commerce platform Shopee as well as video game maker Garena, FLEX (FLEX), a global supply chain solutions provider, Netlink Trust (CJLU.SI), which builds and operations fibre network infrastructure, and MapleTree Logistics Trust (M44U.SI). 
+
+
+# 7. Challenges Encountered
+
+## Plotting an interactive Horizon Graph
+
+In an effort to make the horizon graph interactive for the the user, an attempt was made to use the ggplotly wrapper to translate the attributes of the ggplot2-based horizon graph into Plotly interactive graphs. This was **not successful** as the geom_horizon function from gghorigraph, being a new package developed only in Septemper 2021, had yet to be incorporated into Plotly. See below for error message:
+
+```{r, out.width="80%", out.height="80%", fig.align='center'}
+knitr::include_graphics("ggplotlyerror.PNG")
+```
+
+## Annotating reference lines
+
+The annotate() function in ggplot2 was attempted to label the reference lines marked out in the horizon graphs. However, it was unable to fulfil the task as the text could only be located inside the axes, within the frame of the graph and not above or below the x-axis. The reference line labels were eventually left out so as not to distract the viewer from the actual data on the graph.
 
 ***
 
