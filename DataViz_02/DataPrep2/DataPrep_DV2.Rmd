@@ -1,7 +1,7 @@
 ---
-title: "ISSS608: AY2021-22(T2): DataViz Makeover 1 Data Preparation Log"
+title: "ISSS608: AY2021-22(T2): DataViz Makeover 2 Data Preparation Log"
 description: |
-  This page contains all data preparation steps needed to reproduce the Tableau Visualisation in DataViz Makeover 1
+  This page contains all data preparation steps needed to reproduce the Tableau Visualisation in DataViz Makeover 2
   
 author:
   - name: Melissa Tan
