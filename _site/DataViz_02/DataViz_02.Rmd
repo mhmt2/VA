@@ -84,7 +84,7 @@ The first priority in DataViz Makeoever is to retain the original design as much
 
   1. Based on the current design, the purpose of the visualisation seems to be to compare weekday vs. weekend, inter- and intra-zonal bus trips in Singapore
   
-  2. To that end, a chloropleth map of Singapore will be used in place of the bar charts. Although this replaces the original choice of chart tyoe, and should not usually be encouraged, it is crucial for this particular dataset that we use a map to show the geographical dimension of the data.
+  2. To that end, a chloropleth map of Singapore will be used in place of the bar charts. Although this replaces the original choice of chart type, and should not usually be encouraged, it is crucial for this particular dataset that we use a map to show the geographical dimension of the data.
   
   3. The adjacency matrices will be retained but to improve interpretability, instead of using subzones, which has 303 levels, we will use the 55 planning areas to segment each element on the grid. This will give us a clearer visual while preserving the purpose of the matrix, which is to visualise inter/intra zonal flows.
 
@@ -143,7 +143,7 @@ knitr::include_graphics("dataviz3.png")
 ## 4. Step-by-Step Data Preparation
 
 A selection of programmes including Tableau Prep, JMP Pro and Excel was used to clean and pre-process the data. 
-Tableau Desktop was used for the visualisations. To reproduce this visualisation makeover, detailed steps can be found at the ["Data Prep Log"](https://mviz.netlify.app/dataviz_01/dataprep/dataprep_dv1) section.
+Tableau Desktop was used for the visualisations. To reproduce this visualisation makeover, detailed steps can be found at the ["Data Prep Log"](https://mviz.netlify.app/dataviz_02/dataprep/dataprep_dv2) section.
 
 ## 5. Key Observations
 
