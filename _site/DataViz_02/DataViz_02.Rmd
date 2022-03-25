@@ -143,7 +143,7 @@ knitr::include_graphics("dataviz3.png")
 ## 4. Step-by-Step Data Preparation
 
 A selection of programmes including Tableau Prep, JMP Pro and Excel was used to clean and pre-process the data. 
-Tableau Desktop was used for the visualisations. To reproduce this visualisation makeover, detailed steps can be found at the ["Data Prep Log"](https://mviz.netlify.app/dataviz_02/dataprep/dataprep_dv2) section.
+Tableau Desktop was used for the visualisations. To reproduce this visualisation makeover, detailed steps can be found at the ["Data Prep Log"](https://mviz.netlify.app/dataviz_02/dataprep2/dataprep_dv2) section.
 
 ## 5. Key Observations
 
