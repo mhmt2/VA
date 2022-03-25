@@ -1,0 +1,197 @@
+---
+title: "ISSS608: AY2021-22(T2): DataViz Makeover 2"
+description: |
+  The objective of the DataViz Makeover is to reveal inter- and intra-zonal public bus flows at the planning sub-zone level of January 2022. 
+  
+author:
+  - name: Melissa Tan
+    email: melissa.tan.2021@mitb.smu.edu.sg
+    affiliation: SMU MITB Analytics Track
+    affiliation_url: https://scis.smu.edu.sg/master-it-business/analytics-track/curriculum?gclid=CjwKCAiA3L6PBhBvEiwAINlJ9EJwYxpaZv-zPxR0UMntDh37TrlWU7jwXP9Dcu9jvWvN8uEJsOWzTRoCqrQQAvD_BwE
+date: "`r Sys.Date()`"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+packages = c('tidyverse','knitr')
+
+for(p in packages){
+  if(!require(p, character.only = T)){
+    install.packages(p)
+  }
+  library(p, character.only = T)
+}
+```
+# The Task
+
+The aim of the task is to reveal inter- and intra-zonal public bus flows at the planning sub-zone level of January 2022.
+
+There are 5 parts to the task:
+
+1. Critique the clarity and aesthetics of the original graph, providing at least three observations from each evaluation criterion. 
+
+2. With reference to the critique above, suggest an alternative graphical presentation to improve the current design, providing descriptions of the advantages or solutions provided by the alternative. 
+  
+3. Design the proposed data visualisation with Tableau.
+  
+4. Provide step-by-step descriptions of how the data visualisation was prepared.
+  
+5. Describe three major observations revealed by the data visualisation prepared.
+  
+
+# 1. Critique of Original Visualisation
+
+The original visualisation can be found ["**here**"](https://public.tableau.com/app/profile/tskam/viz/prototype1_16468762782120/Dashboard1) on Tableau Public.  
+
+
+```{r}
+knitr::include_graphics("original_viz.png")
+```
+
+Overall, the visualisation is assessed to be "Confusing and Ugly" (Sorry, Prof!). 
+
+
+## Clarity
+
+  1. **Missing Dimension**: The dataset contained origin-destination (OD) information regarding the bus trips, as well as data on the locations of these bus stops by Planning region, area and subzone. All this geographical information was not represented in the current visualisation.
+
+  2. **Adjacency Matrix**:The adjacency matrix on the right hand side has too many levels, making the matrix difficult to interpret since the different colours across the grid can hardly be distinguished from one another.
+
+  3. **Missing Data**: The dataset contained information regarding bus trips that occurred between 0,1 and 4 hours but this information was not included in the visualisation. Interesting observations on day/night flow of buses might be missed because of this.
+  
+  4. **Title**: The chart has no overall title to explain the what ("Bus Trips"), the what ("Origin-Destination" flows), the where ("Singapore") and the when ("January 2022") of the data. There is also no explanation that "Sz" refers to planning Subzones.
+  
+
+## Aesthetic
+
+  1. **Too many charts**: There were too many charts in a single view, making it difficult for the viewers' eyes to focus on the most pertinent information revealed by the visualisations. 
+  
+  2. **Repetitive axes**: The y-axis had repeated labels for "WEEKDAY" and "WEEKEND". This took up unnecessary space on the page and could be streamlined to just a single set of labels on the left.
+  
+  
+  3. **Legend**: Instead of a radio-button list, the legend could have been formatted as a multi-selection drop down menu for a cleaner and more organised look.
+  
+  4. **Colour**: The visualisation did not make effective use of the colour dimension to highlight interesting variations in the data e.g. differences in the relative number of trips generated to and from the subzones.
+  
+
+# 2. Proposed Design
+
+The first priority in DataViz Makeoever is to retain the original design as much as possible, and improve on the current design. To that end, the proposed design considers the following:
+
+  1. Based on the current design, the purpose of the visualisation seems to be to compare weekday vs. weekend, inter- and intra-zonal bus trips in Singapore
+  
+  2. To that end, a chloropleth map of Singapore will be used in place of the bar charts. Although this replaces the original choice of chart tyoe, and should not usually be encouraged, it is crucial for this particular dataset that we use a map to show the geographical dimension of the data.
+  
+  3. The adjacency matrices will be retained but to improve interpretability, instead of using subzones, which has 303 levels, we will use the 55 planning areas to segment each element on the grid. This will give us a clearer visual while preserving the purpose of the matrix, which is to visualise inter/intra zonal flows.
+
+A sketch of the proposed alternative visualisation design is shown below:
+  
+```{r, out.width="70%", out.height="70%", fig.align='center'}
+
+knitr::include_graphics("sketch1.jpg")
+knitr::include_graphics("sketch2.jpg")
+```
+
+The proposed alternative visualisation tries to make the following improvements:
+
+## Clarity
+
+1. **Completeness of data presented**: The new design includes an important geographical dimension missing from the original. It included the full time range in the data set. Each chloropleth will provide interactive information on:
+
+  + The origin of the trips by each planning area - User may select planning area of interest 
+  + The time period of interest - User may select a range of options e.g. whole day, morning peak, evening peak, night etc
+  + For each selected origin planning area and time period, user will be able to do 2 things. First, by selecting "OUTBOUND" from the menu on the left, he can compare the number of trips made from this origin planning area to all the destination subzones. Second, if he is interested in which subzones the trips are originating from, he can select "INBOUND" and compare the number of trips made out from the different subzones within the selected origin planning area.  
+
+2. **Tooltips**: The new design provides interactive information on the subzone destination and number of trips to this subzone from the origin. 
+
+3. **Use of colours**: Unlike the original, the alternative design uses the colour spectrum via the chloropleth and adjacency matrix to reveal relative differences in the trips made to and from different locations at different times of the day.
+
+4. **Titles**: Simple and clear chart titles supported by explanatory notes on how to navigate the visualisation. The Title will change dynamically depending on choice of filters.
+
+
+## Aesthetic
+
+1. **Layout**: Used Storyboard to tabs within the page layout where the map views, and adjacency matrices are put in separate tabs within the same page so that we can view a larger grid, yet still give viewers the sense that it's still the same visualisation. 
+
+2. **Legend***: Tidied up the legend by using multi-select drop down menu format. Included a time slider to allow user to filter by time period of interest.
+
+
+## 3. Proposed Visualiation on Tableau
+
+The Dashboards can be viewed on Tableau Public [here](https://public.tableau.com/app/profile/melissa.tan5282/viz/DataViz2_ODFLOWS/EXPLORINGBUSTRIPSINSINGAPOREJAN2022?publish=yes)
+
+### Main tab (Map view)
+```{r}
+knitr::include_graphics("dataviz1.png")
+```
+
+### Tab 2 (Weekday OD Matrix)
+```{r}
+knitr::include_graphics("dataviz2.png")
+```
+
+### Tab 3 (Weekend OD Matrix)
+```{r}
+knitr::include_graphics("dataviz3.png")
+```
+
+
+## 4. Step-by-Step Data Preparation
+
+A selection of programmes including Tableau Prep, JMP Pro and Excel was used to clean and pre-process the data. 
+Tableau Desktop was used for the visualisations. To reproduce this visualisation makeover, detailed steps can be found at the ["Data Prep Log"](https://mviz.netlify.app/dataviz_01/dataprep/dataprep_dv1) section.
+
+## 5. Key Observations
+
+Generally, it was revealed from the map that bus riders living in different zones have different locus of travel.
+
+### Observation 1: Weekday Peak Periods (7-10am)
+
+Travel during this period would usually be by workers travelling to their workplaces. By observing the different origin locations during this time period, we can see that workers living in some areas tend to have work places closer to their homes:
+
+1. Workers living in Punggol travelled to destinations mainly on the North-east and Eastern side of Singapore, with a large proportion of intra-zone travel (as seen by the darker shades around Punggol). It also appears that many Punggol residents took the bus to Changi. These are likely airport workers.
+
+```{r, fig.align='center'}
+knitr::include_graphics("punggol.png")
+```
+
+2. On the other hand, places like Bukit Merah showed a much wider coverage, with residents travelling to destinations across the entire island, even though most of the travellers were still riding to nearby areas.
+
+```{r, fig.align='center'}
+knitr::include_graphics("bktmerah.png")
+```
+
+3. Newton revealed an interesting pattern during the evening peak from 5-8pm. As Newton can be considered a central area with many offices located here, one would expect to see that the bus trips from Newton during the evening peak would see greater coverage over the island. However, the trip pattern shows that the trips were mainly within the area, and extended out of the zone in a north/south direction, without reaching the eastern and western parts of Singapore. This contrasts with its adjacent area, Novena, where the trip pattern covered most of Singapore. 
+
+```{r, fig.align='center'}
+knitr::include_graphics("newton.png")
+knitr::include_graphics("novena.png")
+```
+
+### Observation 2: Weekend Night (12midnight-3am)
+
+1. The travel patterns for weekend nights revealed differences between central areas and residential areas. For e.g. Trips departing from Orchard, a shopping district, travelled widely to all parts of the island. However, the volume of rides is relatively low (>100 trips max).
+
+2. In contrast, trips departing from Tampines are high in number (>2,000 trips max) but extending only to within the zone. These are likely residents who are returning home from weekend social activities and catching the feeder buses back from from the train stations.
+
+```{r, fig.align='center'}
+knitr::include_graphics("tampines.png")
+```
+
+### Observation 3: Some bus routes are used mainly for intra-zonal travel, other areas are not well connected by buses for inter-zonal travel.
+
+1. From the adjacency matrix, it can be clearly seen which bus routes are used mainly for intra-zonal travel, and which planning areas are not connected by buses to other parts of Singapore. 
+
+  + For example, from the differences in colour intensity, it can be seen that the majority (14.8%) of the buses that depart Choa Chu Kang, terminate in Choa Chu Kang, viz Marine Parade that has trips spread out across most areas even though the total volume of trips is less that Choa Chu Kang.
+
+  + Places like Boon Lay and Marina South show that the buses ply only specific locations nearby (Boon Lay-Jurong East/West, Marina South-Straits View), as can be seen by the deeper coloured boxes at those locations while most of the row is blank. The buses here could be to serve as feeders or shuttle services.
+
+```{r, fig.align='center'}
+knitr::include_graphics("annotated_am.png")
+```
+
+The reasons for these differences are several. It might be because of the availability of cross-island buses that are more common in older/central towns like Bukit Merah, or the preferences of riders (e.g. some may prefer taking the train). It could also be planning policies that site work places closer to residential areas so people do not need to travel out too far and cause congestion during peak periods or efforts to shift trans-island travelling to the MRT trains rather than buses, limiting bus travel more to serve intra-zonal travellers covering shorter distances. 

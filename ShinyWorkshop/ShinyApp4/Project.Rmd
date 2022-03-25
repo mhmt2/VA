@@ -1,0 +1,39 @@
+---
+title: "Untitled"
+description: |
+  A new article created using the Distill format.
+author:
+  - name: Nora Jones 
+    url: https://example.com/norajones
+    affiliation: Spacely Sprockets
+    affiliation_url: https://example.com/spacelysprokets
+date: "`r Sys.Date()`"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+# Data sources
+
+1. [Hawker Centre Locations with Coordinates](https://gist.github.com/raphodn/eecc3d8f6a5a04793385f44aa8304e30#file-hawker-centres-kml-csv).
+
+2. Hawker stall ratings were obtained from [Hawkerpedia.com](https://www.hawkerpedia.com.sg/en/directories).
+ 
+3. Singapore demographic data,*Singapore Residents by Planning Area/ Subzone, Age Group, Sex, Type of Dwelling, June 2011-2020*, was obtained from [Singstat](https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data). 
+
+4. The Makan Index, an affordability score, was obtained from the LKY School of Public Policy [report](https://lkyspp.nus.edu.sg/docs/default-source/ips/Report_Makan-Index-2nd-ed-final.pdf).
+
+5. Average retail prices of selected consumer items from 2010-2022 were obtained from [Consumer Price Index, January 2022](https://www.singstat.gov.sg/whats-new/latest-news/cpi-highlights).
+
+6. Hawker stall tender bids were obtained from the National Environment Agency's website, [NEA](https://www.nea.gov.sg/corporate-functions/resources/tender-notices).
+
+# References
+
+1. [Can Singapore Keep It's Precious Hawker Culture Alive?, The  Diplomat, January 2021](https://thediplomat.com/2021/01/can-singapore-keep-its-precious-hawker-culture-alive/).
+
+2. [58% of hawkers whose tenancies were up for renewal from April to June had rentals revised down, CNA, 6 July 2021](https://www.channelnewsasia.com/singapore/hawker-centre-rent-increase-kf-seetoh-nea-amy-khor-1990721).
+
+3. [Keeping Char Kway Teow Cheap - At What Price?, LKY School of Public Policy, 2015](https://lkyspp.nus.edu.sg/docs/default-source/case-studies/hawker-centre-case-study.pdf?sfvrsn=2bc7960b_2).
