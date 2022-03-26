@@ -129,7 +129,7 @@ The proposed alternative visualisation tries to make the following improvements:
 
 ## 3. Proposed Visualiation on Tableau
 
-The Dashboards can be viewed on Tableau Public [here](https://public.tableau.com/app/profile/melissa.tan5282/viz/DataViz2_ODFLOWS/EXPLORINGBUSTRIPSINSINGAPOREJAN2022?publish=yes)
+The Dashboards can be viewed on Tableau Public [here](https://public.tableau.com/app/profile/melissa.tan5282/viz/DataViz2_ODFLOWS/EXPLORATIONOFBUSTRIPSINSINGAPOREJAN2022)
 
 ### Main tab (Map view)
 ```{r}
@@ -222,3 +222,9 @@ knitr::include_graphics("annotated_am.png")
 ```
 
 The reasons for these differences are several. It might be because of the availability of cross-island buses that are more common in older/central towns like Bukit Merah, or the preferences of riders (e.g. some may prefer taking the train). It could also be planning policies that site work places closer to residential areas so people do not need to travel out too far and cause congestion during peak periods or efforts to shift trans-island travelling to the MRT trains rather than buses, limiting bus travel more to serve intra-zonal travellers covering shorter distances. 
+
+## 6. Challenges Faced
+
+1. The data processing proved to be difficult with this exercise. It was not ideal nor good practice to toggle between different programmes. With greater proficiency in Tableau Prep Builder, the entire data cleaning process could have been done on it, reducing any potential occurrences of error during the data transfers between programmes.
+
+2. The map visualisation could have been more effective with a spider map, showing the origin hubs connected to the surround destination points. An attempt was made to follow [these examples](https://help.tableau.com/current/pro/desktop/en-us/maps_howto_origin_destination.htm) but it was ultimately unsuccessful as the PATH-ID variable could not be correctly calibrated within the time constraints of the assignment. 
