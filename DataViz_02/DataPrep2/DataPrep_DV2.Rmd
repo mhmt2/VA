@@ -46,7 +46,7 @@ Zoom into the missing rows to check. Use the information from the ORIGIN_PT_CODE
 knitr::include_graphics("images/missing_values2.png")
 ```
 
-The search feature on the ["URA Maps website"](https://www.ura.gov.sg/maps/#) can be used to identify the correct Subzone and Planning Area for each ORIGIN_PT_CODE (bus-stop).
+One way to do this is to use the search feature on the Masterplanning page of the [URA Maps website](https://www.ura.gov.sg/maps/#) to type in the each ORIGIN_PT_CODE (bus-stop) number and identify the correct Subzone and Planning Area.
 
 ```{r}
 knitr::include_graphics("images/uramap.png")
@@ -54,16 +54,16 @@ knitr::include_graphics("images/uramap.png")
 
 For reference, these are the missing information to look out for. It will not be wise to remove these missing rows because they contain data from populous areas and interchanges such as Yishun, Tampines, Woodlands, as well as arterial roads such as NEW UPPER CHANGI ROAD.
 
--	WOODLANDS REGIONAL CENTRE
+-	WOODLANDS REGIONAL CENTRE (47009)
 -	YISHUN CENTRAL (INTERCHANGE 59008, 59009)
--	BALESTIER
--	MT PLEASANT
--	PUNGGOL FIELD
--	GALI BATU (BUKIT PANJANG)
+-	BALESTIER (52119)
+-	MT PLEASANT (41161)
+-	PUNGGOL FIELD (65521, 65529)
+-	GALI BATU (BUKIT PANJANG 45209)
 -	BEDOK SOUTH (NEW UPPER CHANGI ROAD 84059)
--	SENTOSA
--	BISHAN EAST
--	KEAT HONG 
+-	SENTOSA (14521, 14539)
+-	BISHAN EAST (53421)
+-	KEAT HONG (44099)
 -	TAMPINES NORTH (76549, 75489)
 
 Ten rows were eventually removed as they were bus-stops located in Johor Baru, Malaysia, outside the scope of the task (46211, 47711)
@@ -84,20 +84,20 @@ knitr::include_graphics("images/odmatrix.png")
 Replace all null values with 0s. Repeat Step 4 for the WEEKEND datatable. Export both to Excel.
 
 ## Step 5:
-Open the WEEKEND OD MATRIX in Excel. Creaete a new calculated field TOTAL TRIPS (ROW) by summing up each row.ting Remove.
+Open the WEEKDAY OD MATRIX in Excel. Create a new calculated field TOTAL TRIPS (ROW) by summing up each row.
 
 ```{r}
 knitr::include_graphics("images/excel1.png")
 ```
 
 ## Step 6:
-Create a new worksheet PCT_WKEND_TRIPS. Calculate the percentage of each cell by dividing the absolute number of trips in that cell by the row total. 
+Create a new worksheet PCT_WKDAY_TRIPS. Calculate the percentage of each cell by dividing the absolute number of trips in that cell by the row total. 
 
 ```{r}
 knitr::include_graphics("images/excel2.png")
 ```
 
-Repeat steps 5 and 6 for WEEKDAY OD MATRIX.
+Repeat steps 5 and 6 for WEEKEND OD MATRIX.
 
 ## Step 7:
 Open WEEKDAY OD MATRIX Excel on Tableau. Create a new sheet and arrange the columns, rows, and details as shown below to get the adjacency matrix
@@ -109,7 +109,7 @@ knitr::include_graphics("images/tableau1.png")
 ## Step 8:
 To format the matrix, right click on the horizontal labels and select Rotate Label for the names of the planning areas to appear vertically. 
 
-For the Filters, use the multi-select dropdown menu option for a neater and cleaner look
+For the Filters, use the Multiple Values Dropdown Menu option for a neater and cleaner look.
 
 ```{r}
 knitr::include_graphics("images/tableau2.png")
@@ -119,7 +119,7 @@ knitr::include_graphics("images/tableau3.png")
 ## Step 9:
 Repeat Steps 7 and 8 for WEEKEND OD MATRIX.
 
-# Creating the chloropleth
+# Creating the Chloropleth
 
 ## Step 10:
 For the WEEKDAY datatables created in Step 3, use the STACK TABLE feature in JMP Pro to pivot the dataset by organising the fields as below.
@@ -142,12 +142,12 @@ Save the dataset in tranches of no larger than 300k rows that can be joined back
 Repeat step 10 for the WEEKEND datatable.
 
 ## Step 12:
-Connect to the "MP14_SUBZONE_WEB_PL.shp spatial file that contains all the map details of Singapore. The file can be found on ["URA's website"](https://data.gov.sg/dataset/master-plan-2014-subzone-boundary-no-sea)
+Connect to the "MP14_SUBZONE_WEB_PL.shp spatial file that contains all the map details of Singapore. The file can be found here on [data.gov](https://data.gov.sg/dataset/master-plan-2014-subzone-boundary-no-sea)
 
 ## Step 13:
 Open the WEEKDAY datasets created in step 10 in Tableau Prep Builder and use the "join" and "add" functions to rebuild the dataset. 
 
-Drag the spatial  file into the main frame. Use the join function to link up the 2 datasets by Subzone Name
+Drag the spatial  file into the main frame. Use the join function to link up the 2 datasets by Subzone Name i.e. SZ_NAME from the WEEKDAY dataset and SUBZONE_N from the spatial file.
 
 ```{r}
 knitr::include_graphics("images/tableau4.png")
@@ -159,7 +159,7 @@ Output the flow as an extract for use in Tableau Desktop.
 ## Step 15
 Repeat Steps 12-14 for the WEEKEND dataset.
 
-# Step 16
+## Step 16
 
 Open the extract for WEEKDAY on Tableau. Create a new sheet and arrange the columns, rows, and details as shown below to get the chloropleth
 
@@ -193,30 +193,71 @@ Edit the Title to make it dynamically change according to the filter options sel
 knitr::include_graphics("images/tableau7.png")
 ```
 
+# Creating the Bar Charts
+
 ## Step 20
-Repeat steps 16 to 19 for the WEEKEND dataset.
+Create a new worksheet for the bar charts. Arrange the fields in the appropriate columns, rows, filters as shown below. 
+
+```{r}
+knitr::include_graphics("images/tableau11.png")
+```
+
+## Step 21
+To link the ORIGIN_PA and Label filters for the bar chart to the same filters in the chloropleth by right-clicking on the relevant filter >> Apply to Worksheets >> Selected Worksheets
+
+```{r}
+knitr::include_graphics("images/tableau12.png")
+```
+
+In the dialog box that appears, make sure that the two desired sheets are checked. Now the 2 filters will be linked and any change to the filter options in the chloropleth will be reflected in the bar chart.
+
+```{r}
+knitr::include_graphics("images/tableau13.png")
+```
+
+## Step 22
+
+Add a reference line by right-clicking on the y-axis and setting the options in the dialogue box as Average, and Label >> Show Value.
+
+```{r}
+knitr::include_graphics("images/tableau17.png")
+```
+
+## Step 23
+Format the bar charts by narrowing the width of the bars (Select Size from the Marks menu), tidy up the tooltip and the labels of the axes. The final bar chart should look something like this
+
+```{r}
+knitr::include_graphics("images/tableau14.png")
+```
+
+## Step 24
+Repeat steps 16 to 23 for the WEEKEND dataset.
+
 
 # Creating the Story 
 
-## Step 21: 
+## Step 25: 
 Combine all the visualisations into a single workbook by cutting and pasting the 2 sheets with the adjacency matrices to the workbook containing the chloropleths.
 
-## Step 22:
-To create the first tab in the visualisation create a new dashboard and drag the 2 sheets containing the WEEKDAY and WEEKEND chloropleths into the main frame.
+## Step 26:
+To create the first tab in the visualisation create a new dashboard and drag the 4 sheets containing the WEEKDAY and WEEKEND barcharts and chloropleths into the main frame.
+
+At the Size section on the left menu bar, select "Automatic" so that the visualisations will automatically scale to the size of the viewer's screen.
 
 ```{r}
-knitr::include_graphics("images/tableau8.png")
+knitr::include_graphics("images/tableau15.png")
 ```
 
-## Step 23: 
+## Step 27: 
 
 Create a new Story "Exploring Bus Trips in Singapore (January 2022)" by dragging the respective sheets to the tabs in the main frame.    
+
 
 ```{r}
 knitr::include_graphics("images/tableau9.png")
 ```
 
-## Step 24: 
+## Step 28: 
 
 Publish the Story to Tableau Public. 
 
@@ -224,19 +265,19 @@ The final visualisation should look like this:
 
 ### Main Tab
 ```{r}
-knitr::include_graphics("images/dataviz1.png")
+knitr::include_graphics("images/dataviz7.png")
 ```
 
 ### Weekday OD Matrix Tab
 
 ```{r}
-knitr::include_graphics("images/dataviz2.png")
+knitr::include_graphics("images/dataviz5.png")
 ```
 
 ### Weekend OD Matrix Tab
 
 ```{r}
-knitr::include_graphics("images/dataviz3.png")
+knitr::include_graphics("images/dataviz6.png")
 
 ```
 
