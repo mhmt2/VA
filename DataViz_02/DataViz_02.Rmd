@@ -209,16 +209,16 @@ Such patterns were typical and similar across the residential areas such as Bedo
 knitr::include_graphics("boonlay2.png")
 ```
 
-### Observation 3: Some bus routes are used mainly for intra-zonal travel, other areas are not well connected by buses for inter-zonal travel.
+### Observation 3: Some bus routes are used mainly for intra-zonal travel, others are shuttle services that go to specific zones/stops outside of the origin.
 
-1. From the adjacency matrix, it can be clearly seen which bus routes are used mainly for intra-zonal travel, and which planning areas are not connected by buses to other parts of Singapore. 
+1. From the adjacency matrix, it can be clearly seen which bus routes are used mainly for intra-zonal travel, and which are shuttle services. 
 
-    + For example, from the differences in colour intensity, it can be seen that the majority (14.8%) of the buses that depart Choa Chu Kang, terminate in Choa Chu Kang, viz Marine Parade that has trips spread out across most areas even though the total volume of trips is less that Choa Chu Kang.
-
-    + Places like Boon Lay and Marina South show that the buses ply only specific locations nearby (Boon Lay-Jurong East/West, Marina South-Straits View), as can be seen by the deeper coloured boxes at those locations while most of the row is blank. The buses here could be to serve as feeders or shuttle services.
-
+    + Now that the entirety of the matrices are clearly visible, a diagonal line dissecting each grid can be seen in a deeper colour intensity. This indicates a presence of intra-zonal travel within the same planning areas. E.g. The majority (14.8%) of the buses that depart Choa Chu Kang, terminate in Choa Chu Kang, similarly for Jurong East (8.74%) and Straits View (10.91%)
+    
+    + There were also some rows that had only one or a few darker-coloured spots, with the rest of the row indicating no trips that indicated the presence of shuttle services. E.g. from the Southern Islands to Bukit Merah (likely a shuttle bus from Sentosa), from Tuas to Pioneer (likely to shuttle industrial workers), from Mandai to Sembawang/Woodlands/Yishun (perhaps to the Zoo), and from Boon Lay to Jurong West/Pioneer.
+    
 ```{r, fig.align='center'}
-knitr::include_graphics("annotated_am.png")
+knitr::include_graphics("tableau18.png")
 ```
 
 The reasons for these differences are several. It might be because of the availability of cross-island buses that are more common in older/central towns like Bukit Merah, or the preferences of riders (e.g. some may prefer taking the train). It could also be planning policies that site work places closer to residential areas so people do not need to travel out too far and cause congestion during peak periods or efforts to shift trans-island travelling to the MRT trains rather than buses, limiting bus travel more to serve intra-zonal travellers covering shorter distances. 
