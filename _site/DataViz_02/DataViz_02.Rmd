@@ -89,14 +89,22 @@ The first priority in DataViz Makeoever is to retain the original design as much
   3. The adjacency matrices will also be retained but to improve interpretability, instead of using subzones, which has 303 levels, we will use the 55 planning areas to segment each element on the grid. 
   
   4. Since the chloropleth will provide for a view by subzones, the trade-off between granularity and clarity was for the adjacency matrix to give a more user-friendly presentation while still preserving the purpose of the matrix, which is to visualise inter/intra zonal flows.
+  
+  5. Similar to the original, we will place both WEEKDAY and WEEKEND matrices in the same view, using colour to differentiate each. In addition, we will link the Location filter (ORIGIN_PA) of the 2 matrices so that the changes for both grids will be synchonised
+  
+  6. To test if this modification improved the visualisation, an adjacency matrix by Subzone was prepared for WEEKEND, and it was found that if the chart had to fit into a single screen without scrolling, it will become too compressed and not effective in showing up patterns of travel, nor was it clear in providing information on the origins and destinations.
+  
+```{r}
+knitr::include_graphics("subzoneOD.png")
+```
 
 A sketch of the proposed alternative visualisation design is shown below:
 
   
 ```{r, out.width="70%", out.height="70%", fig.align='center'}
 
-knitr::include_graphics("sketch3.jpg")
 knitr::include_graphics("sketch2.jpg")
+knitr::include_graphics("sketch1.jpg")
 ```
 
 The proposed alternative visualisation tries to make the following improvements:
@@ -111,7 +119,7 @@ The proposed alternative visualisation tries to make the following improvements:
 
 2. **Tooltips**: The new design provides interactive information on the subzone destination and number of trips to this subzone from the origin. 
 
-3. **Use of colours**: Unlike the original, the alternative design uses the colour spectrum via the chloropleth and adjacency matrix to reveal relative differences in the trips made to and from different locations at different times of the day.
+3. **Use of colours**: Unlike the original, pre-attentive use of colour was implemented to help the viewer differentiate easily between the WEEKDAY and WEEKEND information across the visualisaton. In addition, the alternative design uses the colour spectrum via the chloropleth and adjacency matrix to reveal relative differences in the trips made to and from different locations at different times of the day. 
 
 4. **Titles**: Simple and clear chart titles supported by explanatory notes on how to navigate the visualisation. The Title will change dynamically depending on choice of filters.
 
@@ -120,9 +128,7 @@ The proposed alternative visualisation tries to make the following improvements:
 
 1. **Bar charts**:The original bar charts were retained with some improvements to aesthetics i.e. narrowing the bars for a sleeker look, adjusting the tick-labels to show the full time range in steps of 2. The bar charts were placed side by side with the chloropleths so viewers can maintain the overview of the trip distribution over 24 hours while exploring specific time periods with the chloropleths 
 
-2a. **Layout**: Used Story to create tabs within the page layout where the map views, and adjacency matrices were put in separate tabs within the same page so that we can view each visualisation more clearly, yet still give viewers the sense that it's still within  the same visualisation. 
-
-2b. The option of trying to fit both weekday and weekend matrices on the same page was attempted and rejected as they did not allow viewers to see both visuals at a glance without scrolling. Shrinking the 2 grids to allow for a single screen view severely compromised the interpretability and usefulness of the matrices and so the final decision was made to use tabs within the dashboard as a least worst option. 
+2. **Layout**: Used Story to create 2 tabs within the page layout where the map views, and adjacency matrix were put in separate tabs within the same page so that we can view each visualisation more clearly, yet still give viewers the sense that it's still within  the same visualisation. The preattentive use of colour to differentiate between WEEKDAY and WEEKEND across both tabs also create a sense of continuity. 
 
 3. **Legend**: Tidied up the legend by using multi-select drop down menu format. Included a time slider to allow user to filter by time period of interest.
 
@@ -131,21 +137,15 @@ The proposed alternative visualisation tries to make the following improvements:
 
 The Dashboards can be viewed on Tableau Public [here](https://public.tableau.com/app/profile/melissa.tan5282/viz/DataViz2_ODFLOWS/EXPLORATIONOFBUSTRIPSINSINGAPOREJAN2022)
 
-### Main tab (Map view)
+### Map view tab
 ```{r}
-knitr::include_graphics("dataviz7.png")
+knitr::include_graphics("dataviz9.png")
 ```
 
-### Tab 2 (Weekday OD Matrix)
+### Adjacency matrix tab
 ```{r}
-knitr::include_graphics("dataviz5.png")
+knitr::include_graphics("dataviz8.png")
 ```
-
-### Tab 3 (Weekend OD Matrix)
-```{r}
-knitr::include_graphics("dataviz6.png")
-```
-
 
 ## 4. Step-by-Step Data Preparation
 
@@ -183,9 +183,9 @@ knitr::include_graphics("novena.png")
 
 #### Weekend Nights (12midnight-3am)
 
-1. The travel patterns for weekend nights revealed differences between central areas and residential areas. For e.g. Trips departing from Orchard, a shopping district, travelled widely to all parts of the island. However, the volume of rides is relatively low (>100 trips max).
+1. The travel patterns for weekend nights revealed differences between central areas and residential areas. For e.g. Trips departing from Orchard, a shopping district, travelled widely to all parts of the island. However, the volume of rides is relatively low (58 trips max, terminating in Balestier).
 
-2. In contrast, trips departing from Tampines are high in number (>2,000 trips max) but extending only to within the zone. These are likely residents who are returning home from weekend social activities and catching the feeder buses back from from the train stations.
+2. In contrast, trips departing from Tampines are high in number (>2,000 trips max, terminating within Tampines East) but extending only to within the zone. These are likely residents who are returning home from weekend social activities and catching the feeder buses back from from the train stations.
 
 ```{r, fig.align='center'}
 knitr::include_graphics("tampines.png")
@@ -193,7 +193,7 @@ knitr::include_graphics("tampines.png")
 
 ### Observation 2: Trips distribution patterns differ between weekday and weekends
 
-1. Observing the distribution patterns for each area over WEEKDAY and WEEKEND show that on weekdays, there are obvious travel peaks at specific time periods. For e.g. the chart below shows the distribution for  Woodlands, a regional hub in the north of Singapore, and it can be seen that the morning peak is between 7-8am while the evening peak is between 6-7pm. In contrast, on the weekends, the trips are more evenly distributed throughout the day although overall volume is significantly lower than on weekdays. 
+1. Observing the distribution patterns for each area over WEEKDAY and WEEKEND show that on weekdays, there are obvious travel peaks at specific time periods. For e.g. the chart below shows the distribution for  **Woodlands**, a regional hub in the north of Singapore, and it can be seen that the morning peak is between 7-8am while the evening peak is between 6-7pm. In contrast, on the weekends, the trips are more evenly distributed throughout the day although overall volume is significantly lower than on weekdays. 
 
 
 ```{r, fig.align='center',out.width="40%", out.height="40%"}
@@ -225,6 +225,6 @@ The reasons for these differences are several. It might be because of the availa
 
 ## 6. Challenges Faced
 
-1. The data processing proved to be difficult with this exercise. It was not ideal nor good practice to toggle between different programmes. With greater proficiency in Tableau Prep Builder, the entire data cleaning process could have been done on it, reducing any potential occurrences of error during the data transfers between programmes.
+1. The data processing proved to be difficult with this exercise. It was not ideal nor good practice to toggle between different programmes like Excel and JMP Pro. With greater proficiency in Tableau Prep Builder, the entire data cleaning process could have been done on it, reducing any potential occurrences of error during the data transfers between programmes.
 
 2. The map visualisation could have been more effective with a spider map, showing the origin hubs connected to the surround destination points. An attempt was made to follow [these examples](https://help.tableau.com/current/pro/desktop/en-us/maps_howto_origin_destination.htm) but it was ultimately unsuccessful as the PATH-ID variable could not be correctly calibrated within the time constraints of the assignment. 

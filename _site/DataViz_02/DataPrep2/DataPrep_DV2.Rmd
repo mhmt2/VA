@@ -91,7 +91,7 @@ knitr::include_graphics("images/excel1.png")
 ```
 
 ## Step 6:
-Create a new worksheet PCT_WKDAY_TRIPS. Calculate the percentage of each cell by dividing the absolute number of trips in that cell by the row total. 
+Create a new worksheet PCT_WKDAY_TRIPS. Calculate the percentage of each cell by dividing the absolute number of trips in that cell by the row total * 100. 
 
 ```{r}
 knitr::include_graphics("images/excel2.png")
@@ -118,6 +118,12 @@ knitr::include_graphics("images/tableau3.png")
 
 ## Step 9:
 Repeat Steps 7 and 8 for WEEKEND OD MATRIX.
+
+Change the colour of the matrix to brown to differentiate it from the WEEKDAY matrix. Adjust the title of each OD Matrix to match.
+
+```{r}
+knitr::include_graphics("images/tableau19.png")
+```
 
 # Creating the Chloropleth
 
@@ -231,16 +237,24 @@ knitr::include_graphics("images/tableau14.png")
 ```
 
 ## Step 24
-Repeat steps 16 to 23 for the WEEKEND dataset.
 
+Repeat steps 16 to 23 for the WEEKEND dataset. Change the colours of the charts to Brown to differentiate it from the WEEKDAY charts
+
+## Step 25
+
+Link the ORIGIN_PA filters for the WEEKDAY and WEEKEND matrices by right-clicking on the filter pill >> Apply to Worksheets >> Selected Worksheets. Ensure that the 2 boxes are checked.
+
+```{r}
+knitr::include_graphics("images/tableau21.png")
+```
 
 # Creating the Story 
 
-## Step 25: 
+## Step 26: 
 Combine all the visualisations into a single workbook by cutting and pasting the 2 sheets with the adjacency matrices to the workbook containing the chloropleths.
 
-## Step 26:
-To create the first tab in the visualisation create a new dashboard and drag the 4 sheets containing the WEEKDAY and WEEKEND barcharts and chloropleths into the main frame.
+## Step 27:
+To create the first tab in the visualisation create a new dashboard "MAP VIEW" and drag the 4 sheets containing the WEEKDAY and WEEKEND barcharts and chloropleths into the main frame.
 
 At the Size section on the left menu bar, select "Automatic" so that the visualisations will automatically scale to the size of the viewer's screen.
 
@@ -248,36 +262,41 @@ At the Size section on the left menu bar, select "Automatic" so that the visuali
 knitr::include_graphics("images/tableau15.png")
 ```
 
-## Step 27: 
+## Step 28: 
 
-Create a new Story "Exploring Bus Trips in Singapore (January 2022)" by dragging the respective sheets to the tabs in the main frame.    
+To create the second tab, create a second dashboard "MATRIX VIEW" and drag the 2 OD matrices into the main frame.
 
+At the Size section on the left menu bar, select "Automatic" so that the visualisations will automatically scale to the size of the viewer's screen.
+
+Since the filters are linked, only one set is required.
+
+
+```{r}
+knitr::include_graphics("images/tableau20.png")
+```
+
+## Step 29
+
+Create a new Story "Exploring Bus Trips in Singapore (January 2022)" by dragging the 2 dashboards to the tabs in the main frame.    
 
 ```{r}
 knitr::include_graphics("images/tableau9.png")
 ```
 
-## Step 28: 
+## Step 30: 
 
 Publish the Story to Tableau Public. 
 
 The final visualisation should look like this:
 
-### Main Tab
+### Map View Tab
 ```{r}
-knitr::include_graphics("images/dataviz7.png")
+knitr::include_graphics("images/dataviz9.png")
 ```
 
-### Weekday OD Matrix Tab
+### Adjacency Matrix Tab
 
 ```{r}
-knitr::include_graphics("images/dataviz5.png")
-```
-
-### Weekend OD Matrix Tab
-
-```{r}
-knitr::include_graphics("images/dataviz6.png")
-
+knitr::include_graphics("images/dataviz8.png")
 ```
 
