@@ -94,7 +94,7 @@ The first priority in DataViz Makeoever is to retain the original design as much
   
   6. To test if this modification improved the visualisation, an adjacency matrix by Subzone was prepared for WEEKEND, and it was found that if the chart had to fit into a single screen without scrolling, it will become too compressed and not effective in showing up patterns of travel, nor was it clear in providing information on the origins and destinations.
   
-```{r}
+```{r,fig.align='center'}
 knitr::include_graphics("subzoneOD.png")
 ```
 
