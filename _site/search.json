@@ -3,10 +3,10 @@
     {
       "path": "about.html",
       "title": "About this site",
-      "description": "This is where I will be publishing my learnings from my MITB modules",
+      "description": "This is where I will be publishing my learnings from my MITB modules. I hope you will find something interesting here.",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-03-27T13:24:39+08:00"
+      "last_modified": "2022-05-06T20:15:03+08:00"
     },
     {
       "path": "index.html",
@@ -14,7 +14,7 @@
       "description": "Data visualisation practices and exercises from ISSS608\n",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-03-27T13:24:40+08:00"
+      "last_modified": "2022-05-06T20:15:04+08:00"
     }
   ],
   "collections": []
